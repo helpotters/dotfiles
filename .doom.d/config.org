@@ -1,0 +1,209 @@
+#+TITLE: Config
+#+DESCRIPTION: Literate Configuration for Doom Emacs
+* About This Config
+This configuration file developed out of a need of a unified, all-encompassing system for personal studies, projects, and self-management.
+
+My goal with this configuration is that it should well-documented and -explanatory, and allow for an all-consuming flexibility for all applications.
+
+** Use-cases of Notes
+*** Learning
+I've set up the ideal learning platform.
+
+From researching, notetaking, and memorization, Emacs will allow for any user to access all scientific literature and learning resources with a quick shortcut via *org-ref* and *sci-hub/library genesis*. 
+
+From here, we'll taking a zettlekasten styled notes via *org-roam* where every piece of information becomes a consolidated and indexable article.
+
+In addition to this, we'll connect it with our Anki account so that we may memorize this info so that it's engrained in our thoughts for relevant referencing.
+
+**** Learning Collaboration
+I have yet to utilize this system to share with others. Nobody builds anything great alone.
+
+Hopefully email addresses and open-file formats will allow us to develop an idea into publication of some form with the assistance of others.
+
+Perhaps a github solution would be best. 
+* elisp primer 
+- =setq= | set a variable
+- =setq-default= | default variable for emacs
+- =expand-file-name= | add as the base directory for reference filenames.
+- =(concat)= | concatenate/add strings together.
+* Preamble
+** Personal Information
+Let's initialize our personal information so that we can mark our documents for ourselves and others..
+#+BEGIN_SRC elisp
+(setq
+        user-full-name "Paul Lemus"
+        user-mail-address "paullemusprotonmail.com")
+#+END_SRC
+
+#+RESULTS:
+: paullemusprotonmail.com
+
+** Basic Settings
+*** Rudimentary
+#+BEGIN_SRC elisp
+(setq-default
+ delete-by-moving-to-trash t
+ x-stretch-cursor t
+ uniquify-buffer-name-style 'forward
+ tab-width 4)
+(setq
+ undo-limit 100000000
+ evil-want-fine-undo t
+ auto-save-default t
+ ;; truncate-string-ellipsis "…"
+ )
+#+END_SRC
+
+#+RESULTS:
+: …
+
+*** Laptop settings
+#+BEGIN_SRC elisp
+(unless (equal "Battery status not available"
+               (battery))
+  (display-battery-mode 1))   
+#+end_src
+
+#+RESULTS:
+
+*** Modeline
+#+BEGIN_SRC elisp
+(defun doom-modeline-conditional-buffer-encoding ()
+  (setq-local doom-modeline-buffer-encoding
+              (unless (or (eq buffer-file-coding-system 'utf-8-unix)
+                          (eq buffer-file-coding-system 'utf-8)))))
+(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
+#+END_SRC
+
+#+RESULTS:
+
+*** Splash Screen
+#+BEGIN_SRC elisp
+
+#+END_SRC
+
+* Doom Emacs Aesthetics
+=>
+** Theming
+*** Colors
+*** Fonts
+Fira-Code with => ligatures.
+#+BEGIN_SRC elisp
+(setq  doom-font (font-spec :family "Fira Code" :size 18)
+       doom-big-font (font-spec :family "Fira Code" :size 36))
+#+END_SRC
+
+*** Relative Line Numbers
+Rather than just counting the numbers from 1-XXX, we can set it relative to the current line we're working. Perfect for moving around in *evil*.
+#+BEGIN_SRC elisp
+(setq display-line-numbers-type t)
+#+END_SRC
+
+* Package Configuration
+** Org-Mode
+This is the best thing ever made in software with no exagerration.
+*** Rudimentary
+#+BEGIN_SRC elisp
+(setq org-base (expand-file-name "~/Dropbox/org"))
+
+(setq org-directory org-base)
+
+(setq org-hide-emphasis-markers t)
+#+END_SRC
+*** org-agenda
+We need rewrite the keywords that our agenda utilizes for todo tasks.
+#+BEGIN_SRC elisp
+(after! org
+  (setq
+   org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
+   ))
+#+END_SRC
+
+**** org-agenda-superstar
+Provide a filtered widescope view of all of our tasks.
+#+BEGIN_SRC elisp
+(use-package! org-super-agenda
+  :after org-agenda
+  :init
+  (setq org-super-agenda-groups '((:name "Today"
+                                   :time-grid t
+                                   :scheduled today)
+                                   (:name "Projects"
+                                   :tags project)
+                                   (:name "Important"
+                                    :priority>= B)
+                                   (:name "Past Due"
+                                    :scheduled past)))
+  :config
+  (org-super-agenda-mode))
+#+END_SRC
+*** org-ref
+#+BEGIN_SRC elisp
+(use-package! org-ref
+  :after org
+  :config
+  (setq
+   org-ref-default-bibliography (list (concat org-base "/papers/master.bib"))
+   org-ref-notes-directory (concat org-base "/papers/")
+   org-ref-bibliography-notes (concat org-base "/papers/master.org")
+   org-ref-completion-library 'org-ref-ivy-cite-completion
+   ;; org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+   org-ref-notes-function 'orb-edit-notes
+   ))
+#+END_SRC
+**** helm-bibtex
+We are utilizing Zotero for managing our library. org-ref is fantastic, however it is not great at managing tags, links, and especially sci-hub integration.
+#+BEGIN_SRC elisp
+(after! org-ref
+  :config
+  (setq
+   bibtex-completion-bibliography (concat org-base "papers/master.bib")
+   bibtex-completion-pdf-field "file"
+   bibtex-completion-notes-path (concat org-base "papers/")
+   bibtex-completion-notes-template-multiple-files
+   (concat
+    "#+TITLE: ${title}\n"
+    "#+ROAM_KEY: cite:${=key=}\n"
+    "* TODO Notes\n"
+    ":PROPERTIES:\n"
+    ":Custom_ID: ${=key=}\n"
+    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+    ":AUTHOR: ${author-abbrev}\n"
+    ":JOURNAL: ${journaltitle}\n"
+    ":DATE: ${date}\n"
+    ":YEAR: ${year}\n"
+    ":DOI: ${doi}\n"
+    ":URL: ${url}\n"
+    ":END:\n\n"
+    )
+
+   )
+  )
+#+END_SRC
+
+*** org-noter
+#+BEGIN_SRC elisp
+(use-package! org-noter
+  :after (:any org pdf-view)
+  :config
+  (setq
+   midnight-mode t))
+#+END_SRC
+*** org-journal
+#+BEGIN_SRC elisp
+(setq
+ org-journal-dir (concat org-base "/journal/")
+ org-journal-date-prefix "#+TITLE: "
+ org-journal-time-prefix "* "
+ org-journal-date-format "%a, %Y-%m-%d"
+ org-journalfile-format "%Y-%m-%d.org")
+#+END_SRC
+
+*** org-bullets
+*** org-roam
+#+BEGIN_SRC elisp
+(setq
+ org-roam-directory (concat org-base "/slip-box/")
+ org-roam-db-location (concat org-base "/slip-box/"))
+#+END_SRC
