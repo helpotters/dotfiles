@@ -15,6 +15,7 @@
 (package! org-fragtog)
 (package! org-pretty-tags)
 (package! golden-ratio)
+;; (package! pretty-mode)
 
 (package! org-ref)
 ;; To install a package directly from a remote git repo, you must specify a

@@ -26,18 +26,20 @@
 
 
 
-(setq  doom-font (font-spec :family "Fira Code" :size 18)
-       doom-big-font (font-spec :family "Fira Code" :size 36))
+;; (setq  doom-font (font-spec :family "Hack" :size 18)
+;;        doom-big-font (font-spec :family "Hack" :size 36))
 
-(setq display-line-numbers-type t)
+;; (setq display-line-numbers-type 'relative)
 
-(setq org-base (expand-file-name "~/Dropbox/org"))
+(setq org-base (expand-file-name "~/Dropbox/org/"))
+(setq org-slip-box (expand-file-name (concat org-base "slip-box/")))
+(setq org-papers (expand-file-name (concat org-base "papers/")))
 
 (setq org-directory org-base)
 
 (setq org-hide-emphasis-markers t)
 
-(after! org
+(after! org-mode
   (setq
    org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
    ))
@@ -58,12 +60,12 @@
   (org-super-agenda-mode))
 
 (use-package! org-ref
-  :after org
+  :after org-mode
   :config
   (setq
-   org-ref-default-bibliography (list (concat org-base "/papers/master.bib"))
-   org-ref-notes-directory (concat org-base "/papers/")
-   org-ref-bibliography-notes (concat org-base "/papers/master.org")
+   org-ref-default-bibliography (list (concat org-papers "master.bib"))
+   org-ref-notes-directory org-papers
+   org-ref-bibliography-notes (concat org-papers "master.org")
    org-ref-completion-library 'org-ref-ivy-cite-completion
    ;; org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
    org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
@@ -76,22 +78,22 @@
    bibtex-completion-bibliography (concat org-base "papers/master.bib")
    bibtex-completion-pdf-field "file"
    bibtex-completion-notes-path (concat org-base "papers/")
-   bibtex-completion-notes-template-multiple-files
-   (concat
-    "#+TITLE: ${title}\n"
-    "#+ROAM_KEY: cite:${=key=}\n"
-    "* TODO Notes\n"
-    ":PROPERTIES:\n"
-    ":Custom_ID: ${=key=}\n"
-    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-    ":AUTHOR: ${author-abbrev}\n"
-    ":JOURNAL: ${journaltitle}\n"
-    ":DATE: ${date}\n"
-    ":YEAR: ${year}\n"
-    ":DOI: ${doi}\n"
-    ":URL: ${url}\n"
-    ":END:\n\n"
-    )
+   ;; bibtex-completion-notes-template-multiple-files
+   ;; (concat
+   ;;  "#+TITLE: ${title}\n"
+   ;;  "#+ROAM_KEY: cite:${=key=}\n"
+   ;;  "* TODO Notes\n"
+   ;;  ":PROPERTIES:\n"
+   ;;  ":Custom_ID: ${=key=}\n"
+   ;;  ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+   ;;  ":AUTHOR: ${author-abbrev}\n"
+   ;;  ":JOURNAL: ${journaltitle}\n"
+   ;;  ":DATE: ${date}\n"
+   ;;  ":YEAR: ${year}\n"
+   ;;  ":DOI: ${doi}\n"
+   ;;  ":URL: ${url}\n"
+   ;;  ":END:\n\n"
+   ;;  )
 
    )
   )
@@ -103,12 +105,13 @@
    midnight-mode t))
 
 (setq
- org-journal-dir (concat org-base "/journal/")
+ org-journal-dir (concat org-base "journal/")
  org-journal-date-prefix "#+TITLE: "
  org-journal-time-prefix "* "
  org-journal-date-format "%a, %Y-%m-%d"
  org-journalfile-format "%Y-%m-%d.org")
 
 (setq
- org-roam-directory (concat org-base "/slip-box/")
- org-roam-db-location (concat org-base "/slip-box/"))
+ org-roam-directory "~/Dropbox/org/slip-box"
+ org-roam-db-location "~/Dropbox/org"
+ )

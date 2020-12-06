@@ -36,14 +36,16 @@
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
        indent-guides     ; highlighted indent columns
-       (ligatures +extra)         ; ligatures and symbols to make your code pretty again
+       (ligatures          ; ligatures and symbols to make your code pretty again
+        +fira
+        +extra)
        minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        ;;nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
-       tabs              ; a tab bar for Emacs
+       ;; tabs              ; a tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
@@ -81,7 +83,7 @@
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       spell             ; tasing you for misspelling mispelling
+       ;; spell             ; tasing you for misspelling mispelling
        grammar           ; tasing grammar mistake every you make
 
        :tools

@@ -54,9 +54,6 @@ Let's initialize our personal information so that we can mark our documents for 
  )
 #+END_SRC
 
-#+RESULTS:
-: …
-
 *** Laptop settings
 #+BEGIN_SRC elisp
 (unless (equal "Battery status not available"
@@ -81,22 +78,20 @@ Let's initialize our personal information so that we can mark our documents for 
 #+BEGIN_SRC elisp
 
 #+END_SRC
-
+:
 * Doom Emacs Aesthetics
-=>
 ** Theming
 *** Colors
 *** Fonts
 Fira-Code with => ligatures.
 #+BEGIN_SRC elisp
-(setq  doom-font (font-spec :family "Fira Code" :size 18)
-       doom-big-font (font-spec :family "Fira Code" :size 36))
+;; (setq  doom-font (font-spec :family "Hack" :size 18)
+;;        doom-big-font (font-spec :family "Hack" :size 36))
 #+END_SRC
-
 *** Relative Line Numbers
 Rather than just counting the numbers from 1-XXX, we can set it relative to the current line we're working. Perfect for moving around in *evil*.
 #+BEGIN_SRC elisp
-(setq display-line-numbers-type t)
+;; (setq display-line-numbers-type 'relative)
 #+END_SRC
 
 * Package Configuration
@@ -104,7 +99,9 @@ Rather than just counting the numbers from 1-XXX, we can set it relative to the 
 This is the best thing ever made in software with no exagerration.
 *** Rudimentary
 #+BEGIN_SRC elisp
-(setq org-base (expand-file-name "~/Dropbox/org"))
+(setq org-base (expand-file-name "~/Dropbox/org/"))
+(setq org-slip-box (expand-file-name (concat org-base "slip-box/")))
+(setq org-papers (expand-file-name (concat org-base "papers/")))
 
 (setq org-directory org-base)
 
@@ -113,7 +110,7 @@ This is the best thing ever made in software with no exagerration.
 *** org-agenda
 We need rewrite the keywords that our agenda utilizes for todo tasks.
 #+BEGIN_SRC elisp
-(after! org
+(after! org-mode
   (setq
    org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
    ))
@@ -140,12 +137,12 @@ Provide a filtered widescope view of all of our tasks.
 *** org-ref
 #+BEGIN_SRC elisp
 (use-package! org-ref
-  :after org
+  :after org-mode
   :config
   (setq
-   org-ref-default-bibliography (list (concat org-base "/papers/master.bib"))
-   org-ref-notes-directory (concat org-base "/papers/")
-   org-ref-bibliography-notes (concat org-base "/papers/master.org")
+   org-ref-default-bibliography (list (concat org-papers "master.bib"))
+   org-ref-notes-directory org-papers
+   org-ref-bibliography-notes (concat org-papers "master.org")
    org-ref-completion-library 'org-ref-ivy-cite-completion
    ;; org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
    org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
@@ -161,22 +158,22 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
    bibtex-completion-bibliography (concat org-base "papers/master.bib")
    bibtex-completion-pdf-field "file"
    bibtex-completion-notes-path (concat org-base "papers/")
-   bibtex-completion-notes-template-multiple-files
-   (concat
-    "#+TITLE: ${title}\n"
-    "#+ROAM_KEY: cite:${=key=}\n"
-    "* TODO Notes\n"
-    ":PROPERTIES:\n"
-    ":Custom_ID: ${=key=}\n"
-    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-    ":AUTHOR: ${author-abbrev}\n"
-    ":JOURNAL: ${journaltitle}\n"
-    ":DATE: ${date}\n"
-    ":YEAR: ${year}\n"
-    ":DOI: ${doi}\n"
-    ":URL: ${url}\n"
-    ":END:\n\n"
-    )
+   ;; bibtex-completion-notes-template-multiple-files
+   ;; (concat
+   ;;  "#+TITLE: ${title}\n"
+   ;;  "#+ROAM_KEY: cite:${=key=}\n"
+   ;;  "* TODO Notes\n"
+   ;;  ":PROPERTIES:\n"
+   ;;  ":Custom_ID: ${=key=}\n"
+   ;;  ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+   ;;  ":AUTHOR: ${author-abbrev}\n"
+   ;;  ":JOURNAL: ${journaltitle}\n"
+   ;;  ":DATE: ${date}\n"
+   ;;  ":YEAR: ${year}\n"
+   ;;  ":DOI: ${doi}\n"
+   ;;  ":URL: ${url}\n"
+   ;;  ":END:\n\n"
+   ;;  )
 
    )
   )
@@ -193,7 +190,7 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 *** org-journal
 #+BEGIN_SRC elisp
 (setq
- org-journal-dir (concat org-base "/journal/")
+ org-journal-dir (concat org-base "journal/")
  org-journal-date-prefix "#+TITLE: "
  org-journal-time-prefix "* "
  org-journal-date-format "%a, %Y-%m-%d"
@@ -202,8 +199,61 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 
 *** org-bullets
 *** org-roam
+**** basic
+        #+BEGIN_SRC elisp
+        (setq org-roam-directory org-slip-box)
+        (setq org-roam-db-location org-slip-box)
+        #+END_SRC
+
+**** org-roam-bibtex
 #+BEGIN_SRC elisp
-(setq
- org-roam-directory (concat org-base "/slip-box/")
- org-roam-db-location (concat org-base "/slip-box/"))
+(use-package! org-roam-bibtex
+  :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind (:map org-mode-map
+         (("C-c n a" . orb-note-actions))))
+(setq orb-templates
+      '(("r" "ref" plain (function org-roam-capture--get-point) ""
+         :file-name "${citekey}"
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
+         :unnarrowed t)))
+(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+
+(setq orb-templates
+      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
+         ""
+         :file-name "${slug}"
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
+
+- tags ::
+- keywords :: ${keywords}
+\* ${title}
+:PROPERTIES:
+:Custom_ID: ${citekey}
+:URL: ${url}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
+:NOTER_PAGE:
+:END:")))
+#+END_SRC
+
+**** org-roam-server
+#+BEGIN_SRC elisp
+(use-package! org-roam-server
+  :after org-roam
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-label-truncate t
+        org-roam-server-label-truncate-length 60
+        org-roam-server-label-wrap-length 20)
+  (defun org-roam-server-open ()
+    "Ensure the server is active, then open the roam graph."
+    (interactive)
+    (org-roam-server-mode 1)
+    (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
+(after! org-roam
+  (org-roam-server-mode))
 #+END_SRC
