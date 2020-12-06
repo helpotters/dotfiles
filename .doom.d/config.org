@@ -85,8 +85,8 @@ Let's initialize our personal information so that we can mark our documents for 
 *** Fonts
 Fira-Code with => ligatures.
 #+BEGIN_SRC elisp
-;; (setq  doom-font (font-spec :family "Hack" :size 18)
-;;        doom-big-font (font-spec :family "Hack" :size 36))
+(setq  doom-font (font-spec :family "Fira Code" :size 18)
+       doom-big-font (font-spec :family "Fira Code" :size 36))
 #+END_SRC
 *** Relative Line Numbers
 Rather than just counting the numbers from 1-XXX, we can set it relative to the current line we're working. Perfect for moving around in *evil*.
@@ -199,7 +199,7 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 
 *** org-bullets
 *** org-roam
-**** basic
+**** Directories 
         #+BEGIN_SRC elisp
         (setq org-roam-directory org-slip-box)
         (setq org-roam-db-location org-slip-box)
@@ -257,3 +257,4 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 (after! org-roam
   (org-roam-server-mode))
 #+END_SRC
+

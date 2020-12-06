@@ -26,8 +26,8 @@
 
 
 
-;; (setq  doom-font (font-spec :family "Hack" :size 18)
-;;        doom-big-font (font-spec :family "Hack" :size 36))
+(setq  doom-font (font-spec :family "Fira Code" :size 18)
+       doom-big-font (font-spec :family "Fira Code" :size 36))
 
 ;; (setq display-line-numbers-type 'relative)
 
@@ -111,7 +111,52 @@
  org-journal-date-format "%a, %Y-%m-%d"
  org-journalfile-format "%Y-%m-%d.org")
 
-(setq
- org-roam-directory "~/Dropbox/org/slip-box"
- org-roam-db-location "~/Dropbox/org"
- )
+        (setq org-roam-directory org-slip-box)
+        (setq org-roam-db-location org-slip-box)
+
+(use-package! org-roam-bibtex
+  :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind (:map org-mode-map
+         (("C-c n a" . orb-note-actions))))
+(setq orb-templates
+      '(("r" "ref" plain (function org-roam-capture--get-point) ""
+         :file-name "${citekey}"
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
+         :unnarrowed t)))
+(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+
+(setq orb-templates
+      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
+         ""
+         :file-name "${slug}"
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
+
+- tags ::
+- keywords :: ${keywords}
+\* ${title}
+:PROPERTIES:
+:Custom_ID: ${citekey}
+:URL: ${url}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
+:NOTER_PAGE:
+:END:")))
+
+(use-package! org-roam-server
+  :after org-roam
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-label-truncate t
+        org-roam-server-label-truncate-length 60
+        org-roam-server-label-wrap-length 20)
+  (defun org-roam-server-open ()
+    "Ensure the server is active, then open the roam graph."
+    (interactive)
+    (org-roam-server-mode 1)
+    (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
+(after! org-roam
+  (org-roam-server-mode))
