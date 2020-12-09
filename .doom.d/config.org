@@ -30,6 +30,7 @@ Perhaps a github solution would be best.
 ** Personal Information
 Let's initialize our personal information so that we can mark our documents for ourselves and others..
 #+BEGIN_SRC elisp
+;;; config.el -*- lexical-binding: t; -*-
 (setq
         user-full-name "Paul Lemus"
         user-mail-address "paullemusprotonmail.com")
@@ -91,7 +92,7 @@ Fira-Code with => ligatures.
 *** Relative Line Numbers
 Rather than just counting the numbers from 1-XXX, we can set it relative to the current line we're working. Perfect for moving around in *evil*.
 #+BEGIN_SRC elisp
-;; (setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type 'relative)
 #+END_SRC
 
 * Package Configuration
@@ -100,7 +101,7 @@ This is the best thing ever made in software with no exagerration.
 *** Rudimentary
 #+BEGIN_SRC elisp
 (setq org-base (expand-file-name "~/Dropbox/org/"))
-(setq org-slip-box (expand-file-name (concat org-base "slip-box/")))
+(setq org-slip-box (expand-file-name (concat org-base "roam/")))
 (setq org-papers (expand-file-name (concat org-base "papers/")))
 
 (setq org-directory org-base)
@@ -143,8 +144,9 @@ Provide a filtered widescope view of all of our tasks.
    org-ref-default-bibliography (list (concat org-papers "master.bib"))
    org-ref-notes-directory org-papers
    org-ref-bibliography-notes (concat org-papers "master.org")
+   org-ref-pdf-directory (concat org-papers "zotero/")
    org-ref-completion-library 'org-ref-ivy-cite-completion
-   ;; org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+   org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
    org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
    org-ref-notes-function 'orb-edit-notes
    ))
@@ -189,25 +191,61 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 #+END_SRC
 *** org-journal
 #+BEGIN_SRC elisp
-(setq
- org-journal-dir (concat org-base "journal/")
- org-journal-date-prefix "#+TITLE: "
- org-journal-time-prefix "* "
- org-journal-date-format "%a, %Y-%m-%d"
- org-journalfile-format "%Y-%m-%d.org")
+(use-package! org-journal
+  :after org
+  :config
+        (setq
+        org-journal-dir (concat org-base "journal/")
+        org-journal-date-prefix "#+TITLE: "
+        org-journal-time-prefix "* "
+        org-journal-date-format "%a, %Y-%m-%d"
+        org-journalfile-format "%Y-%m-%d.org")
+)
 #+END_SRC
 
 *** org-bullets
 *** org-roam
 **** Directories 
         #+BEGIN_SRC elisp
+(use-package! org-roam
+  :after org
+  :init
         (setq org-roam-directory org-slip-box)
         (setq org-roam-db-location org-slip-box)
+)
         #+END_SRC
+
+**** helm-bibtex
+=helm-bibtex= is useful provides search functionality for inserting citations or associated notes. 
+
+When we point it in the right location, it'll locate our pdfs and references for us.
+#+BEGIN_SRC elisp
+(use-package! helm-bibtex
+  :after org
+  :init
+  ; blah blah
+  :config
+  ;blah blah
+  )
+
+(setq bibtex-format-citation-functions
+      '((org-mode . (lambda (x) (insert (concat
+                                         "\\cite{"
+                                         (mapconcat 'identity x ",")
+                                         "}")) ""))))
+(setq
+      bibtex-completion-pdf-field "file"
+      bibtex-completion-bibliography
+      '("~/Dropbox/org/papers/master.bib")
+      bibtex-completion-library-path '("~/Dropbox/org/papers/zotero/")
+     ; bibtex-completion-notes-path "~/Dropbox/Org/references/articles.org"  ;; not needed anymore as I take notes in org-roam
+      )
+#+END_SRC
 
 **** org-roam-bibtex
 #+BEGIN_SRC elisp
 (use-package! org-roam-bibtex
+  :after org-roam
   :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :bind (:map org-mode-map
@@ -239,22 +277,35 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 
 **** org-roam-server
 #+BEGIN_SRC elisp
+;; (use-package! org-roam-server
+;;   :after org-roam
+;;   :config
+;;   (setq org-roam-server-host "127.0.0.1"
+;;         org-roam-server-port 8080
+;;         org-roam-server-export-inline-images t
+;;         org-roam-server-authenticate nil
+;;         org-roam-server-label-truncate t
+;;         org-roam-server-label-truncate-length 60
+;;         org-roam-server-label-wrap-length 20)
+;;   (defun org-roam-server-open ()
+;;     "Ensure the server is active, then open the roam graph."
+;;     (interactive)
+;;     (org-roam-server-mode 1)
+;;     (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
+;; (after! org-roam
+;;   (org-roam-server-mode))
 (use-package! org-roam-server
   :after org-roam
   :config
   (setq org-roam-server-host "127.0.0.1"
         org-roam-server-port 8080
-        org-roam-server-export-inline-images t
         org-roam-server-authenticate nil
-        org-roam-server-label-truncate t
-        org-roam-server-label-truncate-length 60
-        org-roam-server-label-wrap-length 20)
-  (defun org-roam-server-open ()
-    "Ensure the server is active, then open the roam graph."
-    (interactive)
-    (org-roam-server-mode 1)
-    (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
-(after! org-roam
-  (org-roam-server-mode))
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
 #+END_SRC
-

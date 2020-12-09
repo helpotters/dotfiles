@@ -36,9 +36,9 @@
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
        indent-guides     ; highlighted indent columns
-       (ligatures          ; ligatures and symbols to make your code pretty again
-        +fira
-        +extra)
+       ;; (ligatures          ; ligatures and symbols to make your code pretty again
+       ;;  +fira
+       ;;  +extra)
        minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        ;;nav-flash         ; blink cursor line after big motions
@@ -155,7 +155,7 @@
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org               ; organize your plain life in plain text
-        ;; +roam
+        +roam
         +journal
         +pretty
         +pandoc
