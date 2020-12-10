@@ -175,23 +175,6 @@
 :NOTER_PAGE:
 :END:")))
 
-;; (use-package! org-roam-server
-;;   :after org-roam
-;;   :config
-;;   (setq org-roam-server-host "127.0.0.1"
-;;         org-roam-server-port 8080
-;;         org-roam-server-export-inline-images t
-;;         org-roam-server-authenticate nil
-;;         org-roam-server-label-truncate t
-;;         org-roam-server-label-truncate-length 60
-;;         org-roam-server-label-wrap-length 20)
-;;   (defun org-roam-server-open ()
-;;     "Ensure the server is active, then open the roam graph."
-;;     (interactive)
-;;     (org-roam-server-mode 1)
-;;     (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
-;; (after! org-roam
-;;   (org-roam-server-mode))
 (use-package! org-roam-server
   :after org-roam
   :config
