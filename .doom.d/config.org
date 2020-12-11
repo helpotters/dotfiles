@@ -151,6 +151,9 @@ Provide a filtered widescope view of all of our tasks.
    org-ref-notes-function 'orb-edit-notes
    ))
 #+END_SRC
+
+#+RESULTS:
+
 **** helm-bibtex
 We are utilizing Zotero for managing our library. org-ref is fantastic, however it is not great at managing tags, links, and especially sci-hub integration.
 #+BEGIN_SRC elisp
@@ -277,23 +280,6 @@ When we point it in the right location, it'll locate our pdfs and references for
 
 **** org-roam-server
 #+BEGIN_SRC elisp
-;; (use-package! org-roam-server
-;;   :after org-roam
-;;   :config
-;;   (setq org-roam-server-host "127.0.0.1"
-;;         org-roam-server-port 8080
-;;         org-roam-server-export-inline-images t
-;;         org-roam-server-authenticate nil
-;;         org-roam-server-label-truncate t
-;;         org-roam-server-label-truncate-length 60
-;;         org-roam-server-label-wrap-length 20)
-;;   (defun org-roam-server-open ()
-;;     "Ensure the server is active, then open the roam graph."
-;;     (interactive)
-;;     (org-roam-server-mode 1)
-;;     (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))))
-;; (after! org-roam
-;;   (org-roam-server-mode))
 (use-package! org-roam-server
   :after org-roam
   :config
