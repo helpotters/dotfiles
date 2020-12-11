@@ -91,12 +91,12 @@
 #######################################
 
     # compton/picom | blurring, rounded corners, shadows
-         exec_always picom --corner-radius 24 -fading -c --shadow-radius 36 --shadow-opacity 0.5 --blur-background --blur-strength 10 -i 0.75 -e 0.8 --backend glx --vsync --blur-method kawase
+         exec_always picom --corner-radius 24 -fading -c --shadow-radius 36 --shadow-opacity 0.5 --blur-background --blur-strength 10 -i 0.75 -e 0.8 --backend glx --vsync --blur-method kawase --rounded-corners-exclude Polybar 
     # wallpapers
-        exec_always wal -i ~/arts/images/wallpapers/darkShallows.png
+        exec_always wal -i ~/arts/images/wallpapers/sunset.png
     # i3-gaps | spacing,
         for_window [class=".*"] border pixel 0
-        gaps inner 80
+        gaps inner 35
         gaps outer 20
 
 
