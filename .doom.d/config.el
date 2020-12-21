@@ -27,8 +27,10 @@
 
 
 
-(setq  doom-font (font-spec :family "Fira Code" :size 18)
-       doom-big-font (font-spec :family "Fira Code" :size 36))
+
+
+(setq  doom-font (font-spec :family "JetBrains Mono" :size 18)
+       doom-big-font (font-spec :family "JetBrains Mono" :size 36))
 
 (setq display-line-numbers-type 'relative)
 
@@ -65,40 +67,43 @@
   :config
   (setq
    org-ref-default-bibliography (list (concat org-papers "master.bib"))
+   org-ref-pdf-directory (concat org-papers "zotero/")
    org-ref-notes-directory org-papers
    org-ref-bibliography-notes (concat org-papers "master.org")
-   org-ref-pdf-directory (concat org-papers "zotero/")
+   ;; org-ref-pdf-directory (concat org-papers "zotero/")
    org-ref-completion-library 'org-ref-ivy-cite-completion
    org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
-   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-ivy-bibtex
    org-ref-notes-function 'orb-edit-notes
    ))
 
-(after! org-ref
+(use-package! ivy-bibtex
+  :after org
+  :init
   :config
-  (setq
-   bibtex-completion-bibliography (concat org-base "papers/master.bib")
-   bibtex-completion-pdf-field "file"
-   bibtex-completion-notes-path (concat org-base "papers/")
-   ;; bibtex-completion-notes-template-multiple-files
-   ;; (concat
-   ;;  "#+TITLE: ${title}\n"
-   ;;  "#+ROAM_KEY: cite:${=key=}\n"
-   ;;  "* TODO Notes\n"
-   ;;  ":PROPERTIES:\n"
-   ;;  ":Custom_ID: ${=key=}\n"
-   ;;  ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-   ;;  ":AUTHOR: ${author-abbrev}\n"
-   ;;  ":JOURNAL: ${journaltitle}\n"
-   ;;  ":DATE: ${date}\n"
-   ;;  ":YEAR: ${year}\n"
-   ;;  ":DOI: ${doi}\n"
-   ;;  ":URL: ${url}\n"
-   ;;  ":END:\n\n"
-   ;;  )
-
-   )
   )
+(setq
+ bibtex-completion-bibliography (concat org-base "papers/master.bib")
+ bibtex-completion-pdf-field "file"
+ bibtex-completion-library-path org-papers
+ bibtex-completion-notes-path (concat org-base "papers/")
+ bibtex-completion-notes-template-multiple-files
+ (concat
+  "#+TITLE: ${title}\n"
+  "#+ROAM_KEY: cite:${=key=}\n"
+  "* TODO Notes\n"
+  ":PROPERTIES:\n"
+  ":Custom_ID: ${=key=}\n"
+  ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+  ":AUTHOR: ${author-abbrev}\n"
+  ":JOURNAL: ${journaltitle}\n"
+  ":DATE: ${date}\n"
+  ":YEAR: ${year}\n"
+  ":DOI: ${doi}\n"
+  ":URL: ${url}\n"
+  ":END:\n\n"
+  )
+ )
 
 (use-package! org-noter
   :after (:any org pdf-view)
@@ -120,30 +125,8 @@
 (use-package! org-roam
   :after org
   :init
-        (setq org-roam-directory org-slip-box)
-        (setq org-roam-db-location org-slip-box)
-)
-
-(use-package! helm-bibtex
-  :after org
-  :init
-  ; blah blah
-  :config
-  ;blah blah
+  (setq org-roam-directory org-slip-box)
   )
-
-(setq bibtex-format-citation-functions
-      '((org-mode . (lambda (x) (insert (concat
-                                         "\\cite{"
-                                         (mapconcat 'identity x ",")
-                                         "}")) ""))))
-(setq
-      bibtex-completion-pdf-field "file"
-      bibtex-completion-bibliography
-      '("~/Dropbox/org/papers/master.bib")
-      bibtex-completion-library-path '("~/Dropbox/org/papers/zotero/")
-     ; bibtex-completion-notes-path "~/Dropbox/Org/references/articles.org"  ;; not needed anymore as I take notes in org-roam
-      )
 
 (use-package! org-roam-bibtex
   :after org-roam
