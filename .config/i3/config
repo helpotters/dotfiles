@@ -49,6 +49,8 @@
             bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
         # Polybar Startup
             exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+        # Dunst Startup
+            exec --no-startup-id dunst -config .config/dunst/dunstrc
     ##########Modes and Functionality######
         # Main Functions
             # reload the configuration file
@@ -91,13 +93,13 @@
 #######################################
 
     # compton/picom | blurring, rounded corners, shadows
-         exec_always picom --corner-radius 24 -fading -c --shadow-radius 36 --shadow-opacity 0.5 --blur-background --blur-strength 10 -i 0.75 -e 0.8 --backend glx --vsync --blur-method kawase --rounded-corners-exclude "class_g = 'Polybar'" 
+         exec_always picom --corner-radius 24 -fading -c --shadow-radius 36 --shadow-opacity 0.5 --blur-background --blur-strength 10 -i 0.75 -e 0.8 --backend glx --vsync --blur-method kawase --rounded-corners-exclude "class_g = 'Polybar'" "class_g = 'dunst'" "class_g = 'peek'" 
     # wallpapers
-        exec_always wal -i ~/arts/images/wallpapers/sunset.png
+        exec_always wal -i ~/arts/images/wallpapers/pink-aesthetic.jpg -l
     # i3-gaps | spacing,
         for_window [class=".*"] border pixel 0
-        gaps inner 15
-        gaps outer 20
+        gaps inner 65
+        gaps outer 40
 
 
 # default workspaces
