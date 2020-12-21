@@ -1,0 +1,67 @@
+configuration {
+
+	font: "Envy Code R 10";
+	width: 30;
+	line-margin: 10;
+	lines: 6;
+	columns: 2;
+
+    display-ssh:    "";
+    display-run:    "";
+    display-drun:   "";
+    display-window: "";
+    display-combi:  "";
+    show-icons:     true;
+}
+* {
+  background-color: #31363b;
+  border-color: #2e343f;
+  text-color: #8ca0aa;
+  spacing: 0;
+  lines: 10; /*Number of entries to display*/
+  width: 400px;
+  font: "Fira Code Regular 12";
+}
+
+inputbar {
+  border: 0 0 1px 0;
+  children: [prompt,entry];
+}
+
+prompt {
+  padding: 16px;
+  border: 0 1px 0 0;
+  background-color: #212529;
+  font: "Fira Code Regular 12";
+}
+
+textbox {
+  background-color: #2e343f;
+  border: 0 0 1px 0;
+  border-color: #282C33;
+  padding: 8px 16px;
+}
+
+entry {
+  padding: 16px;
+  background-color: #54595D;
+  text-color: #FFFFFF;
+}
+
+listview {
+  cycle: false;
+  margin: 0 0 -1px 0;
+  scrollbar: false;
+}
+
+element {
+  border: 0 0 1px 0;
+  padding: 16px;
+}
+
+element selected {
+  background-color: #255953;
+  text-color: #ffffff;
+  border: 2px 0 2px 0;
+  border-color: #1ABC9C;
+}
