@@ -45,8 +45,6 @@ install_from_file packages/arch.list
 
 print_success "Packages installed and updated"
 
-sudo systemctl enable lightdm.service 
-
 # cleanup
 print "Cleanup"
 yay -Sc --aur --noconfirm
