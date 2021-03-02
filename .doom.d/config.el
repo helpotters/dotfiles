@@ -4,15 +4,16 @@
         user-mail-address "paullemusprotonmail.com")
 
 (setq-default
- delete-by-moving-to-trash t
- x-stretch-cursor t
- uniquify-buffer-name-style 'forward
- tab-width 4)
+    delete-by-moving-to-trash t
+    x-stretch-cursor t
+    uniquify-buffer-name-style 'forward
+    tab-width 4
+)
 (setq
- undo-limit 100000000
- evil-want-fine-undo t
- auto-save-default t
- ;; truncate-string-ellipsis "…"
+    undo-limit 100000000
+    evil-want-fine-undo t
+    auto-save-default t
+    ;; truncate-string-ellipsis "…"
  )
 
 (unless (equal "Battery status not available"
@@ -26,6 +27,10 @@
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
 
+
+    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
 
 
 
@@ -42,25 +47,43 @@
 
 (setq org-hide-emphasis-markers t)
 
-(after! org-mode
+(after! org
   (setq
-   org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
-   ))
+        org-todo-keywords '((sequence
+                             "REPEAT(r)"
+                             "NEXT(n)" ;; next task
+                             "TODO(t)" ;; A task
+                             "WAITING(w)"
+                             "PROJ(p)"
+                             "|"
+                             "DONE(d)"
+                             "CANCELED(c)"
+                           ))
+    )
+)
 
-(use-package! org-super-agenda
-  :after org-agenda
-  :init
-  (setq org-super-agenda-groups '((:name "Today"
-                                   :time-grid t
-                                   :scheduled today)
-                                   (:name "Projects"
-                                   :tags project)
-                                   (:name "Important"
-                                    :priority>= B)
-                                   (:name "Past Due"
-                                    :scheduled past)))
-  :config
-  (org-super-agenda-mode))
+(after! org
+  (setq
+        org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+  )
+)
+
+;; (use-package! org-super-agenda
+;;   :after org-agenda
+;;   :init
+;;   (setq org-super-agenda-groups '((:name "Today"
+;;                                    :time-grid t
+;;                                    :scheduled today)
+;;                                    (:name "Projects"
+;;                                    :tags project)
+;;                                    (:name "Important"
+;;                                     :priority>= B)
+;;                                    (:name "Past Due"
+;;                                     :scheduled past)))
+;;   :config
+;;   (org-super-agenda-mode))
 
 (use-package! org-ref
   :after org-mode

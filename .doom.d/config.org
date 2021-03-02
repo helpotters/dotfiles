@@ -35,23 +35,20 @@ Let's initialize our personal information so that we can mark our documents for 
         user-full-name "Paul Lemus"
         user-mail-address "paullemusprotonmail.com")
 #+END_SRC
-
-#+RESULTS:
-: paullemusprotonmail.com
-
 ** Basic Settings
 *** Rudimentary
 #+BEGIN_SRC elisp
 (setq-default
- delete-by-moving-to-trash t
- x-stretch-cursor t
- uniquify-buffer-name-style 'forward
- tab-width 4)
+    delete-by-moving-to-trash t
+    x-stretch-cursor t
+    uniquify-buffer-name-style 'forward
+    tab-width 4
+)
 (setq
- undo-limit 100000000
- evil-want-fine-undo t
- auto-save-default t
- ;; truncate-string-ellipsis "…"
+    undo-limit 100000000
+    evil-want-fine-undo t
+    auto-save-default t
+    ;; truncate-string-ellipsis "…"
  )
 #+END_SRC
 
@@ -79,7 +76,13 @@ Let's initialize our personal information so that we can mark our documents for 
 #+BEGIN_SRC elisp
 
 #+END_SRC
-:
+*** Keybindings
+#+BEGIN_SRC elisp
+    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+
+#+END_SRC
 * Doom Emacs Aesthetics
 ** Theming
 *** Splash Screen
@@ -102,6 +105,7 @@ Rather than just counting the numbers from 1-XXX, we can set it relative to the 
 ** Org-Mode
 This is the best thing ever made in software with no exagerration.
 *** Rudimentary
+**** Directories
 #+BEGIN_SRC elisp
 (setq org-base (expand-file-name "~/Dropbox/org/"))
 (setq org-slip-box (expand-file-name (concat org-base "roam/")))
@@ -111,32 +115,56 @@ This is the best thing ever made in software with no exagerration.
 
 (setq org-hide-emphasis-markers t)
 #+END_SRC
-*** org-agenda
-We need rewrite the keywords that our agenda utilizes for todo tasks.
+**** Keywords
+We need rewrite the keywords that our agenda utilizes for todo tasks: namely we are going to prime our productivity by differentiating between the /next/ task and /a/ task; NEXT and TODO.
+
 #+BEGIN_SRC elisp
-(after! org-mode
+(after! org
   (setq
-   org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))
-   ))
+        org-todo-keywords '((sequence
+                             "REPEAT(r)"
+                             "NEXT(n)" ;; next task
+                             "TODO(t)" ;; A task
+                             "WAITING(w)"
+                             "PROJ(p)"
+                             "|"
+                             "DONE(d)"
+                             "CANCELED(c)"
+                           ))
+    )
+)
+#+END_SRC
+*** org-agenda
+
+Now we'll also configure some basic point abouts our agenda-view, namely the default days for starting, deadlines, and only showing tasks and removing done tasks.
+
+#+BEGIN_SRC elisp
+(after! org
+  (setq
+        org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
+        org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+  )
+)
 #+END_SRC
 
 **** org-agenda-superstar
 Provide a filtered widescope view of all of our tasks.
 #+BEGIN_SRC elisp
-(use-package! org-super-agenda
-  :after org-agenda
-  :init
-  (setq org-super-agenda-groups '((:name "Today"
-                                   :time-grid t
-                                   :scheduled today)
-                                   (:name "Projects"
-                                   :tags project)
-                                   (:name "Important"
-                                    :priority>= B)
-                                   (:name "Past Due"
-                                    :scheduled past)))
-  :config
-  (org-super-agenda-mode))
+;; (use-package! org-super-agenda
+;;   :after org-agenda
+;;   :init
+;;   (setq org-super-agenda-groups '((:name "Today"
+;;                                    :time-grid t
+;;                                    :scheduled today)
+;;                                    (:name "Projects"
+;;                                    :tags project)
+;;                                    (:name "Important"
+;;                                     :priority>= B)
+;;                                    (:name "Past Due"
+;;                                     :scheduled past)))
+;;   :config
+;;   (org-super-agenda-mode))
 #+END_SRC
 *** org-ref
 #+BEGIN_SRC elisp
