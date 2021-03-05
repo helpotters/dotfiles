@@ -56,7 +56,7 @@ bindsym $mod+Ctrl+m exec pavucontrol
 
 # Start Applications
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
-bindsym $mod+F2 exec vivaldi-stable 
+bindsym $mod+F2 exec qutebrowser
 bindsym $mod+F3 exec pcmanfm
 # bindsym $mod+F3 exec ranger
 bindsym $mod+Shift+F3 exec pcmanfm_pkexec
@@ -424,4 +424,6 @@ mode "$mode_gaps_outer" {
 
 # Swap caps-lock and escape key on environment startup.
 exec_always --no-startup-id setxkbmap -option caps:swapescape
-
+# Emacs daemon
+exec_always --no-startup-id emacs --daemon
+bindsym $mod+F9 exec emacsclient -c
