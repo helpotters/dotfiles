@@ -26,8 +26,8 @@
 
        ;; ido               ; the other *other* search engine...
        (ivy               ; a search engine for love and life
-        ;; +fuzzy
-        ;; +childframe
+       ;;  ;; +fuzzy
+       ;;  ;; +childframe
         +icons)
 
        :ui
@@ -87,7 +87,7 @@
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       ;; spell             ; tasing you for misspelling mispelling
+       spell             ; tasing you for misspelling mispelling
        grammar           ; tasing grammar mistake every you make
 
        :tools

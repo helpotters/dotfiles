@@ -1,31 +1,6 @@
 #+TITLE: Config
 #+DESCRIPTION: Literate Configuration for Doom Emacs
-* About This Config
-This configuration file developed out of a need of a unified, all-encompassing system for personal studies, projects, and self-management.
-
-My goal with this configuration is that it should well-documented and -explanatory, and allow for an all-consuming flexibility for all applications.
-
-** Use-cases of Notes
-*** Learning
-I've set up the ideal learning platform.
-
-From researching, notetaking, and memorization, Emacs will allow for any user to access all scientific literature and learning resources with a quick shortcut via *org-ref* and *sci-hub/library genesis*.
-
-From here, we'll taking a zettlekasten styled notes via *org-roam* where every piece of information becomes a consolidated and indexable article.
-
-In addition to this, we'll connect it with our Anki account so that we may memorize this info so that it's engrained in our thoughts for relevant referencing.
-
-**** Learning Collaboration
-I have yet to utilize this system to share with others. Nobody builds anything great alone.
-
-Hopefully email addresses and open-file formats will allow us to develop an idea into publication of some form with the assistance of others.
-
-Perhaps a github solution would be best.
-* elisp primer
-- =setq= | set a variable
-- =setq-default= | default variable for emacs
-- =expand-file-name= | add as the base directory for reference filenames.
-- =(concat)= | concatenate/add strings together.
+#+STARTUP: overview
 * Preamble
 ** Personal Information
 Let's initialize our personal information so that we can mark our documents for ourselves and others..
@@ -103,7 +78,6 @@ Rather than just counting the numbers from 1-XXX, we can set it relative to the 
 
 * Package Configuration
 ** Org-Mode
-This is the best thing ever made in software with no exagerration.
 *** Rudimentary
 **** Directories
 #+BEGIN_SRC elisp
@@ -134,6 +108,18 @@ We need rewrite the keywords that our agenda utilizes for todo tasks: namely we 
     )
 )
 #+END_SRC
+**** Quality of Life
+#+BEGIN_SRC elisp
+(setq enable-local-eval t)
+(setq safe-local-eval-forms '((progn (org-agenda-list) (other-window 1))))
+(setq org-log-into-drawer t)
+#+END_SRC
+*** org-habit
+Org-habit is an existing module in org-mode, we will simply enable it to allow us to tag some repeated TODOs with the =STYLE= property of =habit=.
+#+BEGIN_SRC elisp
+(add-to-list 'org-modules 'org-habit)
+#+END_SRC
+
 *** org-agenda
 
 Now we'll also configure some basic point abouts our agenda-view, namely the default days for starting, deadlines, and only showing tasks and removing done tasks.
@@ -168,50 +154,26 @@ Provide a filtered widescope view of all of our tasks.
 #+END_SRC
 *** org-ref
 #+BEGIN_SRC elisp
-(use-package! org-ref
-  :after org-mode
-  :config
-  (setq
-   org-ref-default-bibliography (list (concat org-papers "master.bib"))
-   org-ref-pdf-directory (concat org-papers "zotero/")
-   org-ref-notes-directory org-papers
-   org-ref-bibliography-notes (concat org-papers "master.org")
-   ;; org-ref-pdf-directory (concat org-papers "zotero/")
-   org-ref-completion-library 'org-ref-ivy-cite-completion
-   org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
-   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-ivy-bibtex
-   org-ref-notes-function 'orb-edit-notes
-   ))
+(setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
+(setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
+(setq org-ref-notes-directory org-papers)
+(setq org-ref-bibliography-notes (concat org-papers "master.org"))
+(setq org-ref-completion-library 'org-ref-ivy-cite-completion)
+(setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-ivy-bibtex)
+(setq org-ref-notes-function 'orb-edit-notes)
 #+END_SRC
 **** ivy-bibtex
 We are utilizing Zotero for managing our library. org-ref is fantastic, however it is not great at managing tags, links, and especially sci-hub integration.
 #+BEGIN_SRC elisp
 (use-package! ivy-bibtex
   :after org
-  :init
   :config
-  )
+)
 (setq
  bibtex-completion-bibliography (concat org-base "papers/master.bib")
  bibtex-completion-pdf-field "file"
- bibtex-completion-library-path org-papers
+ bibtex-completion-library-path (concat org-papers "zotero/storage/")
  bibtex-completion-notes-path (concat org-base "papers/")
- bibtex-completion-notes-template-multiple-files
- (concat
-  "#+TITLE: ${title}\n"
-  "#+ROAM_KEY: cite:${=key=}\n"
-  "* TODO Notes\n"
-  ":PROPERTIES:\n"
-  ":Custom_ID: ${=key=}\n"
-  ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-  ":AUTHOR: ${author-abbrev}\n"
-  ":JOURNAL: ${journaltitle}\n"
-  ":DATE: ${date}\n"
-  ":YEAR: ${year}\n"
-  ":DOI: ${doi}\n"
-  ":URL: ${url}\n"
-  ":END:\n\n"
-  )
  )
 #+END_SRC
 *** org-noter
@@ -249,35 +211,35 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 
 **** org-roam-bibtex
 #+BEGIN_SRC elisp
-(use-package! org-roam-bibtex
-  :after org-roam
-  :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :bind (:map org-mode-map
-         (("C-c n a" . orb-note-actions))))
-(setq orb-templates
-      '(("r" "ref" plain (function org-roam-capture--get-point) ""
-         :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
-         :unnarrowed t)))
-(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+;; (use-package! org-roam-bibtex
+;;   :after org-roam
+;;   :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
+;;   :hook (org-roam-mode . org-roam-bibtex-mode)
+;;   :bind (:map org-mode-map
+;;          (("C-c n a" . orb-note-actions))))
+;; (setq orb-templates
+;;       '(("r" "ref" plain (function org-roam-capture--get-point) ""
+;;          :file-name "${citekey}"
+;;          :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
+;;          :unnarrowed t)))
+;; (setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
 
-(setq orb-templates
-      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
-         ""
-         :file-name "${slug}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
+;; (setq orb-templates
+;;       '(("n" "ref+noter" plain (function org-roam-capture--get-point)
+;;          ""
+;;          :file-name "${slug}"
+;;          :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
 
-- tags ::
-- keywords :: ${keywords}
-\* ${title}
-:PROPERTIES:
-:Custom_ID: ${citekey}
-:URL: ${url}
-:AUTHOR: ${author-or-editor}
-:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
-:NOTER_PAGE:
-:END:")))
+;; - tags ::
+;; - keywords :: ${keywords}
+;; \* ${title}
+;; :PROPERTIES:
+;; :Custom_ID: ${citekey}
+;; :URL: ${url}
+;; :AUTHOR: ${author-or-editor}
+;; :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
+;; :NOTER_PAGE:
+;; :END:")))
 #+END_SRC
 
 **** org-roam-server

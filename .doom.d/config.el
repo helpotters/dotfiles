@@ -28,9 +28,9 @@
 
 
 
-    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
-    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
-    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+(global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+(global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
 
 
 
@@ -62,6 +62,12 @@
     )
 )
 
+(setq enable-local-eval t)
+(setq safe-local-eval-forms '((progn (org-agenda-list) (other-window 1))))
+(setq org-log-into-drawer t)
+
+(add-to-list 'org-modules 'org-habit)
+
 (after! org
   (setq
         org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
@@ -85,47 +91,23 @@
 ;;   :config
 ;;   (org-super-agenda-mode))
 
-(use-package! org-ref
-  :after org-mode
-  :config
-  (setq
-   org-ref-default-bibliography (list (concat org-papers "master.bib"))
-   org-ref-pdf-directory (concat org-papers "zotero/")
-   org-ref-notes-directory org-papers
-   org-ref-bibliography-notes (concat org-papers "master.org")
-   ;; org-ref-pdf-directory (concat org-papers "zotero/")
-   org-ref-completion-library 'org-ref-ivy-cite-completion
-   org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
-   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-ivy-bibtex
-   org-ref-notes-function 'orb-edit-notes
-   ))
+(setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
+(setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
+(setq org-ref-notes-directory org-papers)
+(setq org-ref-bibliography-notes (concat org-papers "master.org"))
+(setq org-ref-completion-library 'org-ref-ivy-cite-completion)
+(setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-ivy-bibtex)
+(setq org-ref-notes-function 'orb-edit-notes)
 
 (use-package! ivy-bibtex
   :after org
-  :init
   :config
-  )
+)
 (setq
  bibtex-completion-bibliography (concat org-base "papers/master.bib")
  bibtex-completion-pdf-field "file"
- bibtex-completion-library-path org-papers
+ bibtex-completion-library-path (concat org-papers "zotero/storage/")
  bibtex-completion-notes-path (concat org-base "papers/")
- bibtex-completion-notes-template-multiple-files
- (concat
-  "#+TITLE: ${title}\n"
-  "#+ROAM_KEY: cite:${=key=}\n"
-  "* TODO Notes\n"
-  ":PROPERTIES:\n"
-  ":Custom_ID: ${=key=}\n"
-  ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-  ":AUTHOR: ${author-abbrev}\n"
-  ":JOURNAL: ${journaltitle}\n"
-  ":DATE: ${date}\n"
-  ":YEAR: ${year}\n"
-  ":DOI: ${doi}\n"
-  ":URL: ${url}\n"
-  ":END:\n\n"
-  )
  )
 
 (use-package! org-noter
@@ -151,35 +133,35 @@
   (setq org-roam-directory org-slip-box)
   )
 
-(use-package! org-roam-bibtex
-  :after org-roam
-  :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :bind (:map org-mode-map
-         (("C-c n a" . orb-note-actions))))
-(setq orb-templates
-      '(("r" "ref" plain (function org-roam-capture--get-point) ""
-         :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
-         :unnarrowed t)))
-(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+;; (use-package! org-roam-bibtex
+;;   :after org-roam
+;;   :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
+;;   :hook (org-roam-mode . org-roam-bibtex-mode)
+;;   :bind (:map org-mode-map
+;;          (("C-c n a" . orb-note-actions))))
+;; (setq orb-templates
+;;       '(("r" "ref" plain (function org-roam-capture--get-point) ""
+;;          :file-name "${citekey}"
+;;          :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
+;;          :unnarrowed t)))
+;; (setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
 
-(setq orb-templates
-      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
-         ""
-         :file-name "${slug}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
+;; (setq orb-templates
+;;       '(("n" "ref+noter" plain (function org-roam-capture--get-point)
+;;          ""
+;;          :file-name "${slug}"
+;;          :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
 
-- tags ::
-- keywords :: ${keywords}
-\* ${title}
-:PROPERTIES:
-:Custom_ID: ${citekey}
-:URL: ${url}
-:AUTHOR: ${author-or-editor}
-:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
-:NOTER_PAGE:
-:END:")))
+;; - tags ::
+;; - keywords :: ${keywords}
+;; \* ${title}
+;; :PROPERTIES:
+;; :Custom_ID: ${citekey}
+;; :URL: ${url}
+;; :AUTHOR: ${author-or-editor}
+;; :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
+;; :NOTER_PAGE:
+;; :END:")))
 
 (use-package! org-roam-server
   :after org-roam
