@@ -130,28 +130,18 @@ Now we'll also configure some basic point abouts our agenda-view, namely the def
         org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
         org-agenda-skip-scheduled-if-done t
         org-agenda-skip-deadline-if-done t
+        org-agenda-span 1
+        org-agenda-compact-blocks t
   )
 )
 #+END_SRC
 
-**** org-agenda-superstar
+**** org-super-agenda
 Provide a filtered widescope view of all of our tasks.
 #+BEGIN_SRC elisp
-;; (use-package! org-super-agenda
-;;   :after org-agenda
-;;   :init
-;;   (setq org-super-agenda-groups '((:name "Today"
-;;                                    :time-grid t
-;;                                    :scheduled today)
-;;                                    (:name "Projects"
-;;                                    :tags project)
-;;                                    (:name "Important"
-;;                                     :priority>= B)
-;;                                    (:name "Past Due"
-;;                                     :scheduled past)))
-;;   :config
-;;   (org-super-agenda-mode))
+
 #+END_SRC
+
 *** org-ref
 #+BEGIN_SRC elisp
 (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))

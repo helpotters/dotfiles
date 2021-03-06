@@ -28,9 +28,9 @@
 
 
 
-(global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
-(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
-(global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
 
 
 
@@ -73,23 +73,12 @@
         org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
         org-agenda-skip-scheduled-if-done t
         org-agenda-skip-deadline-if-done t
+        org-agenda-span 1
+        org-agenda-compact-blocks t
   )
 )
 
-;; (use-package! org-super-agenda
-;;   :after org-agenda
-;;   :init
-;;   (setq org-super-agenda-groups '((:name "Today"
-;;                                    :time-grid t
-;;                                    :scheduled today)
-;;                                    (:name "Projects"
-;;                                    :tags project)
-;;                                    (:name "Important"
-;;                                     :priority>= B)
-;;                                    (:name "Past Due"
-;;                                     :scheduled past)))
-;;   :config
-;;   (org-super-agenda-mode))
+
 
 (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
 (setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
