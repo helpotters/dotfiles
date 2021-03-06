@@ -28,9 +28,9 @@
 
 
 
-    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
-    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
-    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+(global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+(global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
 
 
 
@@ -78,7 +78,61 @@
   )
 )
 
-
+(setq org-agenda-custom-commands
+      '(("z" "Super zaen view"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                                :time-grid t
+                                :date today
+                                :todo "TODAY"
+                                :scheduled today
+                                :order 1)))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-super-agenda-groups
+                        '((:name "Next to do"
+                                 :todo "NEXT"
+                                 :order 1)
+                          (:name "Important"
+                                 :tag "Important"
+                                 :priority "A"
+                                 :order 6)
+                          (:name "Due Today"
+                                 :deadline today
+                                 :order 2)
+                          (:name "Due Soon"
+                                 :deadline future
+                                 :order 8)
+                          (:name "Overdue"
+                                 :deadline past
+                                 :order 7)
+                          (:name "Assignments"
+                                 :tag "Assignment"
+                                 :order 10)
+                          (:name "Issues"
+                                 :tag "Issue"
+                                 :order 12)
+                          (:name "Projects"
+                                 :tag "Project"
+                                 :order 14)
+                          (:name "Emacs"
+                                 :tag "Emacs"
+                                 :order 13)
+                          (:name "Research"
+                                 :tag "Research"
+                                 :order 15)
+                          (:name "To read"
+                                 :tag "Read"
+                                 :order 30)
+                          (:name "Waiting"
+                                 :todo "WAITING"
+                                 :order 20)
+                          (:name "trivial"
+                                 :priority<= "C"
+                                 :tag ("Trivial" "Unimportant")
+                                 :todo ("SOMEDAY" )
+                                 :order 90)
+                          (:discard (:tag ("Chore" "Routine" "Daily"))))))))))
 
 (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
 (setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
