@@ -120,6 +120,15 @@ Org-habit is an existing module in org-mode, we will simply enable it to allow u
 (add-to-list 'org-modules 'org-habit)
 #+END_SRC
 
+We'll also change up the org-habit chain glyphs to something more aesthetically pleasing: the two to change are the completed days, current, and failed days.
+#+BEGIN_SRC elisp
+;; (setq
+;;  org-habit-completed-glyph 244
+;;  org-habit-today-glyph 32
+
+;;  )
+#+END_SRC
+
 *** org-agenda
 
 Now we'll also configure some basic point abouts our agenda-view, namely the default days for starting, deadlines, and only showing tasks and removing done tasks.
@@ -127,76 +136,154 @@ Now we'll also configure some basic point abouts our agenda-view, namely the def
 #+BEGIN_SRC elisp
 (after! org
   (setq
-        org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
-        org-agenda-skip-scheduled-if-done t
-        org-agenda-skip-deadline-if-done t
-        org-agenda-span 1
-        org-agenda-compact-blocks t
+   org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
+   org-agenda-skip-scheduled-if-done t
+   org-agenda-skip-deadline-if-done t
+   org-agenda-skip-timestamp-if-done t
+   org-agenda-current-time-string "Now"
+   ;; org-agenda-breadcrumbs-separator ""
+   org-agenda-block-separator '""
+   org-agenda-span 1
+   ;; org-agenda-compact-blocks t
+   )
   )
-)
 #+END_SRC
 
 **** org-super-agenda
-Provide a filtered widescope view of all of our tasks.
+We are breaking up our org-agenda into multiple views, the most important one being our daily view, followed by our nightly and weekly reviews.
 #+BEGIN_SRC elisp
+(use-package! org-super-agenda
+  :after org-agenda
+  :init
+  (setq org-agenda-custom-commands
+        '( ;; all container
+          ("a" "Concise Day View"
+           (;; view container
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-agenda-remove-tags)
+                         ;; (org-agenda-prefix-format "   %i %?-2 t%s")
+                         (org-super-agenda-groups
+                          '((:name " Habits"
+                             :date today
+                             :habit t
+                             :order 1)
+                            (:discard (:anything))
+                            )))
+                     )
 
-(setq org-agenda-custom-commands
-      '(("z" "Super zaen view"
-         ((agenda "" ((org-agenda-span 'day)
-                      (org-super-agenda-groups
-                       '((:name "Today"
-                                :time-grid t
-                                :date today
-                                :todo "TODAY"
-                                :scheduled today
-                                :order 1)))))
-          (alltodo "" ((org-agenda-overriding-header "")
-                       (org-super-agenda-groups
-                        '((:name "Next to do"
-                                 :todo "NEXT"
-                                 :order 1)
-                          (:name "Important"
-                                 :tag "Important"
-                                 :priority "A"
-                                 :order 6)
-                          (:name "Due Today"
-                                 :deadline today
-                                 :order 2)
-                          (:name "Due Soon"
-                                 :deadline future
-                                 :order 8)
-                          (:name "Overdue"
-                                 :deadline past
-                                 :order 7)
-                          (:name "Assignments"
-                                 :tag "Assignment"
-                                 :order 10)
-                          (:name "Issues"
-                                 :tag "Issue"
-                                 :order 12)
-                          (:name "Projects"
-                                 :tag "Project"
-                                 :order 14)
-                          (:name "Emacs"
-                                 :tag "Emacs"
-                                 :order 13)
-                          (:name "Research"
-                                 :tag "Research"
-                                 :order 15)
-                          (:name "To read"
-                                 :tag "Read"
-                                 :order 30)
-                          (:name "Waiting"
-                                 :todo "WAITING"
-                                 :order 20)
-                          (:name "trivial"
-                                 :priority<= "C"
-                                 :tag ("Trivial" "Unimportant")
-                                 :todo ("SOMEDAY" )
-                                 :order 90)
-                          (:discard (:tag ("Chore" "Routine" "Daily"))))))))))
+            (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
+                        (org-agenda-scheduled-leaders '("" "          "))
+                        (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "            " ""))
+
+
+                        (org-super-agenda-groups
+                         '((:name " Today's Schedule "
+                            :time-grid t
+                            :date today
+                            :habit nil
+                            :order 2)
+                           (:name " Missed "
+                            :date today
+                            :scheduled past
+                            :order 3)
+                           (:discard (:anything)))
+                         ))
+                    )
+            );;view container end
+           );; concise view container end
+          ("j" "Daily Glance"
+           (
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-super-agenda-groups
+                          '((:log t)
+                            (:name " UPCOMING "
+                             :todo "NEXT"
+                             :date today
+                             :order 1)
+                            (:name "Project Actions "
+                             :todo "PROJ"
+                             :children "NEXT"
+                             :order 2)
+                            (:discard (:anything)))
+
+                          )))
+
+
+            (agenda "" ((org-agenda-overriding-header "")
+                        (org-super-agenda-groups
+                         '((:name " Today's Schedule "
+                            :time-grid t
+                            :date today
+                            :order 3)
+
+                           (:discard (:anything))))
+                        )
+                    )
+            ) ;; container end
+           ) ;; daily glance container end
+          );; all views container end
+        ;; (alltodo "" ((org-agenda-overriding-header "Daily Review")
+        ;;              (org-super-agenda-groups
+        ;;               '((:log t)
+        ;;                 ;; (:name "To refile"
+        ;;                 ;;        :file-path "captures/todo.org"))
+        ;;                 (:name "Overdue"
+        ;;                  :deadline past
+        ;;                  :order 7)
+        ;;                 (:name "Meetings"
+        ;;                  :and (:tag "MEETING" :scheduled future)
+        ;;                  :order 10)
+        ;;                 )))
+        ;;          )
+        );; setq container end
+
+
+  :config
+  (org-super-agenda-mode)
+  ) ;; use package end
 #+END_SRC
 
+#+RESULTS:
+: t
+
+**** category icons
+#+BEGIN_SRC elisp
+;; (after! org
+;;   (setq
+;;    org-agenda-category-icon-alist `(
+;;                                     ;; ("web dev" "~/Dropbox/Apps/png/web-dev.png" nil nil ((:width 36) (:height 36) (:aspect center))  )
+;;                                     ;; ("education" "~/Dropbox/App/png/education.png" (:width 36) (:height 36) :aspect center)
+;;                                     ;; ("lifting" "~/Dropbox/App/png/lifting.png" (:width 36) (:height 36) :aspect center )
+;;                                     ;; ("health" "~/Dropbox/App/png/health.png")
+;;                                     ("dnd" "~/Dropbox/App/png/dnd.png" nil nil :aspect center)
+;;                                     ("linux" "~/Dropbox/App/png/linux.png")
+;;                                     ("emacs" "~/Dropbox/App/png/emacs.png")
+;;                                     )
+;;    )
+(after! org (setq org-agenda-category-icon-alist '(
+                                                   ;; Education Cats
+                                                   ("uni" "~/Dropbox/Apps/png/school.png" nil nil :ascent center)
+                                                   ("reading" "~/Dropbox/Apps/png/chemistry-1.png" nil nil :ascent center)
+                                                   ("homework" "~/Dropbox/Apps/png/chemistry.png" nil nil :ascent center)
+                                                   ;; Interpersonal
+                                                   ("meeting" "~/Dropbox/Apps/png/contacts.png" nil nil :ascent center)
+                                                   ("zoom" "~/Dropbox/Apps/png/videoconference.png" nil nil :ascent center)
+                                                   ("dnd" "~/Dropbox/Apps/png/icosahedron.png" nil nil :ascent center)
+                                                   ;; Finances
+                                                   ("real-estate" "~/Dropbox/Apps/png/eco-house.png" nil nil :ascent center)
+                                                   ("investing" "~/Dropbox/Apps/png/accruals.png" nil nil :ascent center)
+                                                   ;; Computers
+                                                   ("linux" "~/Dropbox/Apps/png/linux.png" nil nil :ascent center) ;; computer maintence
+                                                   ("emacs" "~/Dropbox/Apps/png/emacs.png" nil nil :ascent center) ;; emacs maintenence
+                                                   ("web dev" "~/Dropbox/Apps/png/web-design.png" nil nil :ascent center)
+                                                   ;; Health
+                                                   ("exercise" "~/Dropbox/Apps/png/barbell.png" nil nil :ascent center)
+                                                   ("health" "~/Dropbox/Apps/png/heart-1.png" nil nil :ascent center)
+                                                   ("brain" "~/Dropbox/Apps/png/brain.png" nil nil :ascent center)
+                                                   ;; Planning
+                                                   ("plan" "~/Dropbox/Apps/png/filter-1.png" nil nil :ascent center)
+                                                   )))
+#+END_SRC
 *** org-ref
 #+BEGIN_SRC elisp
 (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
