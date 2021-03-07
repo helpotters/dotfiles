@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name:ruby 
-# key:ruby 
-# --
-#+begin_src ruby :exports both :results output 
-
-#+end_src

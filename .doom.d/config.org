@@ -192,6 +192,35 @@ We are breaking up our org-agenda into multiple views, the most important one be
                      )
             );;view container end
            );; concise view container end
+          ("e" "Tomes & Learning"
+           (
+            (alltodo "NEXT" ((org-agenda-overriding-header " Stay Focused ")
+                             (org-agenda-remove-tags)
+                             (org-agenda-prefix-format "  %i %?-2 t%s")
+                             (org-super-agenda-groups
+                              '((:log t)
+                                (:name " Readings "
+                                 :todo "NEXT"
+                                 :category ("reading")
+                                 :order 1)
+                                (:name " Assignments"
+                                 :category "assignment"
+                                 :todo "NEXT"
+                                 :order 2)
+                                (:discard (:anything)))
+                              )))
+
+
+            ;; (agenda "" ((org-agenda-overriding-header "Important Dates")
+            ;;             (org-super-agenda-groups
+            ;;              '((:name "Exams "
+            ;;                 :time-grid t
+            ;;                 :order 3)
+            ;;                (:discard (:anything))))
+            ;;             )
+            ;;         )
+            ) ;; container end
+           )
           ("j" "Daily Glance"
            (
             (alltodo "" ((org-agenda-overriding-header "")
