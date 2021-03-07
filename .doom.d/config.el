@@ -97,7 +97,7 @@
            (;; view container
             (alltodo "" ((org-agenda-overriding-header "")
                          (org-agenda-remove-tags)
-                         ;; (org-agenda-prefix-format "   %i %?-2 t%s")
+                         (org-agenda-prefix-format "  %i %?-2 t%s")
                          (org-super-agenda-groups
                           '((:name " Habits"
                              :date today
@@ -107,24 +107,25 @@
                             )))
                      )
 
-            (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
-                        (org-agenda-scheduled-leaders '("" "          "))
-                        (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "            " ""))
+            (alltodo "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
+                         (org-agenda-scheduled-leaders '("" "          "))
+                         (org-agenda-prefix-format " %i %?-2 t%s")
+                         ;; (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
 
 
-                        (org-super-agenda-groups
-                         '((:name " Today's Schedule "
-                            :time-grid t
-                            :date today
-                            :habit nil
-                            :order 2)
-                           (:name " Missed "
-                            :date today
-                            :scheduled past
-                            :order 3)
-                           (:discard (:anything)))
-                         ))
-                    )
+                         (org-super-agenda-groups
+                          '((:name " Today's Schedule "
+                             :discard (:property "STYLE")
+                             :date today
+                             :scheduled today
+                             :order 2)
+                            (:name " Missed "
+                             :date today
+                             :scheduled past
+                             :order 3)
+                            (:discard (:anything)))
+                          ))
+                     )
             );;view container end
            );; concise view container end
           ("j" "Daily Glance"
