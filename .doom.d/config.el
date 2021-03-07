@@ -93,7 +93,7 @@
   :init
   (setq org-agenda-custom-commands
         '( ;; all container
-          ("a" "Concise Day View"
+          ("c" "Concise Day View"
            (;; view container
             (alltodo "" ((org-agenda-overriding-header "")
                          (org-agenda-remove-tags)
@@ -107,22 +107,32 @@
                             )))
                      )
 
+            (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
+                        ;; (org-agenda-scheduled-leaders '( '(defun org-agenda-get-category-icon) "          "))
+                        ;; (org-agenda-prefix-format " %i %?-2 t%s")
+                        (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                        (org-super-agenda-groups
+                         '((:name " Today's Schedule "
+                            :discard (:property "STYLE")
+                            :time-grid t
+                            :date today
+                            :scheduled today
+                            :order 1
+                            :discard(:anything)
+                            ))
+                         ))
+                    )
+
             (alltodo "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
                          (org-agenda-scheduled-leaders '("" "          "))
                          (org-agenda-prefix-format " %i %?-2 t%s")
                          ;; (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
-
-
                          (org-super-agenda-groups
-                          '((:name " Today's Schedule "
-                             :discard (:property "STYLE")
-                             :date today
-                             :scheduled today
-                             :order 2)
+                          '(
                             (:name " Missed "
                              :date today
                              :scheduled past
-                             :order 3)
+                             :order 1)
                             (:discard (:anything)))
                           ))
                      )
@@ -136,8 +146,8 @@
                              (org-super-agenda-groups
                               '((:log t)
                                 (:name " Readings "
+                                 :discard(:not (:category "reading"))
                                  :todo "NEXT"
-                                 :category ("reading")
                                  :order 1)
                                 (:name " Assignments"
                                  :category "assignment"
@@ -157,22 +167,22 @@
             ;;         )
             ) ;; container end
            )
-          ("j" "Daily Glance"
+          ("d" "Daily Glance"
            (
-            (alltodo "" ((org-agenda-overriding-header "")
-                         (org-super-agenda-groups
-                          '((:log t)
-                            (:name " UPCOMING "
-                             :todo "NEXT"
-                             :date today
-                             :order 1)
-                            (:name "Project Actions "
-                             :todo "PROJ"
-                             :children "NEXT"
-                             :order 2)
-                            (:discard (:anything)))
+            (alltodo "NEXT" ((org-agenda-overriding-header "")
+                             (org-super-agenda-groups
+                              '((:log t)
+                                (:name " UPCOMING "
+                                 :todo "NEXT"
+                                 :date today
+                                 :order 1)
+                                (:name "Project Actions "
+                                 :todo "NEXT"
+                                 :children "PROJ"
+                                 :order 2)
+                                (:discard (:anything)))
 
-                          )))
+                              )))
 
 
             (agenda "" ((org-agenda-overriding-header "")
@@ -181,7 +191,6 @@
                             :time-grid t
                             :date today
                             :order 3)
-
                            (:discard (:anything))))
                         )
                     )
