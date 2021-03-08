@@ -28,9 +28,9 @@
 
 
 
-(global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
-(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
-(global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
 
 
 
@@ -100,9 +100,10 @@
                          (org-agenda-prefix-format "  %i %?-2 t%s")
                          (org-super-agenda-groups
                           '((:name " Habits"
-                             :date today
-                             :habit t
-                             :order 1)
+                             :discard (:not (:habit t :and (:todo "REPEAT")))
+                             :scheduled today
+                             :order 1
+                             )
                             (:discard (:anything))
                             )))
                      )
@@ -110,7 +111,16 @@
             (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
                         ;; (org-agenda-scheduled-leaders '( '(defun org-agenda-get-category-icon) "          "))
                         ;; (org-agenda-prefix-format " %i %?-2 t%s")
-                        (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "   %?-12t% s")
+                           (timeline  . " %?-i % s")
+                           ;; (todo  . " %c")
+                           ;; (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
                         (org-super-agenda-groups
                          '((:name " Today's Schedule "
                             :discard (:property "STYLE")
@@ -169,20 +179,22 @@
            )
           ("d" "Daily Glance"
            (
-            (alltodo "NEXT" ((org-agenda-overriding-header "")
-                             (org-super-agenda-groups
-                              '((:log t)
-                                (:name " UPCOMING "
-                                 :todo "NEXT"
-                                 :date today
-                                 :order 1)
-                                (:name "Project Actions "
-                                 :todo "NEXT"
-                                 :children "PROJ"
-                                 :order 2)
-                                (:discard (:anything)))
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-super-agenda-groups
+                          '((:log t)
+                            (:name " UPCOMING "
+                             :todo "NEXT"
+                             :date today
+                             :order 1
+                             :discard (:anything))
+                            (:name "Project Actions "
+                             :todo "PROJ"
+                             :discard (:not (:todo "NEXT"))
+                             )
+                            (:auto-group t)
+                            )
 
-                              )))
+                          )))
 
 
             (agenda "" ((org-agenda-overriding-header "")
@@ -196,6 +208,47 @@
                     )
             ) ;; container end
            ) ;; daily glance container end
+          ("w" "Weekly Overview"
+           (
+            (agenda "" ((org-agenda-overriding-header " Here's Your Week ")
+                        (org-agenda-remove-tags)
+                        (org-agenda-span 7)
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "  %?-12t% s")
+                           (timeline  . " %?-i % s")
+                           ;; (todo  . " %c")
+                           ;; (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-start-day "-1d")
+                        (org-super-agenda-groups
+                         '((:log t)
+                           (:name " "
+                            :scheduled future
+                            :todo "TODO"
+                            :order 1)
+                           ;; (:name " Assignments"
+                           ;;  :children t
+                           ;;  :auto-parent 't
+                           ;;  :order 2)
+                           ;; (:discard (:anything))
+                           )
+                         )))
+
+
+            ;; (agenda "" ((org-agenda-overriding-header "Important Dates")
+            ;;             (org-super-agenda-groups
+            ;;              '((:name "Exams "
+
+            ;;                 :time-grid t
+            ;;                 :order 3)
+            ;;                (:discard (:anything))))
+            ;;             )
+            ;;         )
+            ) ;; container end
+           ) ;; week container end
           );; all views container end
         ;; (alltodo "" ((org-agenda-overriding-header "Daily Review")
         ;;              (org-super-agenda-groups
@@ -241,6 +294,7 @@
                                                    ;; Finances
                                                    ("real-estate" "~/Dropbox/Apps/png/eco-house.png" nil nil :ascent center)
                                                    ("investing" "~/Dropbox/Apps/png/accruals.png" nil nil :ascent center)
+                                                   ("work" "~/Dropbox/Apps/png/work.png" nil nil :ascent center)
                                                    ;; Computers
                                                    ("linux" "~/Dropbox/Apps/png/linux.png" nil nil :ascent center) ;; computer maintence
                                                    ("emacs" "~/Dropbox/Apps/png/emacs.png" nil nil :ascent center) ;; emacs maintenence
@@ -276,7 +330,7 @@
   :after (:any org pdf-view)
   :config
   (setq
-   midnight-mode t))
+   pdf-view-midnight-minor-mode t))
 
 (use-package! org-journal
   :after org
@@ -289,41 +343,43 @@
         org-journalfile-format "%Y-%m-%d.org")
 )
 
+
+
 (use-package! org-roam
   :after org
   :init
   (setq org-roam-directory org-slip-box)
   )
 
-;; (use-package! org-roam-bibtex
-;;   :after org-roam
-;;   :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
-;;   :hook (org-roam-mode . org-roam-bibtex-mode)
-;;   :bind (:map org-mode-map
-;;          (("C-c n a" . orb-note-actions))))
-;; (setq orb-templates
-;;       '(("r" "ref" plain (function org-roam-capture--get-point) ""
-;;          :file-name "${citekey}"
-;;          :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
-;;          :unnarrowed t)))
-;; (setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
+(use-package! org-roam-bibtex
+  :after org-roam
+  :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :bind (:map org-mode-map
+         (("C-c n a" . orb-note-actions))))
+(setq orb-templates
+      '(("r" "ref" plain (function org-roam-capture--get-point) ""
+         :file-name "${citekey}"
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
+         :unnarrowed t)))
+(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
 
-;; (setq orb-templates
-;;       '(("n" "ref+noter" plain (function org-roam-capture--get-point)
-;;          ""
-;;          :file-name "${slug}"
-;;          :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
+(setq orb-templates
+      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
+         ""
+         :file-name "${slug}"
+         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
 
-;; - tags ::
-;; - keywords :: ${keywords}
-;; \* ${title}
-;; :PROPERTIES:
-;; :Custom_ID: ${citekey}
-;; :URL: ${url}
-;; :AUTHOR: ${author-or-editor}
-;; :NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
-;; :NOTER_PAGE:
-;; :END:")))
+- tags ::
+- keywords :: ${keywords}
+\* ${title}
+:PROPERTIES:
+:Custom_ID: ${citekey}
+:URL: ${url}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
+:NOTER_PAGE:
+:END:")))
 
 (use-package! org-roam-server
   :after org-roam
