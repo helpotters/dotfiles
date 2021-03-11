@@ -4,16 +4,21 @@
         user-mail-address "paullemusprotonmail.com")
 
 (setq-default
-    delete-by-moving-to-trash t
-    x-stretch-cursor t
-    uniquify-buffer-name-style 'forward
-    tab-width 4
-)
+ delete-by-moving-to-trash t
+ x-stretch-cursor t
+ uniquify-buffer-name-style 'forward
+ tab-width 4
+ )
 (setq
-    undo-limit 100000000
-    evil-want-fine-undo t
-    auto-save-default t
-    ;; truncate-string-ellipsis "…"
+ undo-limit 100000000
+ evil-want-fine-undo t
+ auto-save-default t
+ ;; truncate-string-ellipsis "…"
+ )
+(setq
+ ;; golden-ratio-mode t
+ ;; golden-ratio-auto-scale t
+ ;; golden-ratio-wide-adjust-factor 8.8
  )
 
 (unless (equal "Battery status not available"
@@ -30,7 +35,11 @@
 
     (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
     (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+    (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
+    (global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
+    (global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
     (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+    (global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
 
 
 
@@ -49,18 +58,19 @@
 
 (after! org
   (setq
-        org-todo-keywords '((sequence
-                             "REPEAT(r)"
-                             "NEXT(n)" ;; next task
-                             "TODO(t)" ;; A task
-                             "WAITING(w)"
-                             "PROJ(p)"
-                             "|"
-                             "DONE(d)"
-                             "CANCELED(c)"
-                           ))
-    )
-)
+   org-todo-keywords '((sequence
+                        "REPEAT(r)"
+                        "NEXT(n)" ;; next task
+                        "TODO(t@)" ;; A task
+                        "PROG(g@)" ;; IN progress
+                        "WAITING(w@)"
+                        "PROJ(p@)"
+                        "|"
+                        "DONE(d@)"
+                        "CANCELED(c@/!)"
+                        ))
+   )
+  )
 
 (setq enable-local-eval t)
 (setq safe-local-eval-forms '((progn (org-agenda-list) (other-window 1))))
@@ -109,14 +119,30 @@
                      )
 
             (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
-                        ;; (org-agenda-scheduled-leaders '( '(defun org-agenda-get-category-icon) "          "))
-                        ;; (org-agenda-prefix-format " %i %?-2 t%s")
+                        ;; (defun foo ()
+                        ;;   (let ((x (nth 1 (org-agenda-get-category))))
+                        ;;     (if x
+                        ;;         (concat "[ " (org-agenda-get-category-icon(list x)) " ]")
+                        ;;       "")))
+
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "  %?-12t% s")
+                           (timeline  . " %?-i % s")
+                           ;; (todo  . "(foo)")
+                           ;; (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-prefix-format
+
+                         )
                         (org-agenda-prefix-format
                          '(
                            ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
                            (agenda  . "   %?-12t% s")
                            (timeline  . " %?-i % s")
-                           ;; (todo  . " %c")
+                           (todo  . " %c-:i")
                            ;; (tags  . " %i %-12:c")
                            ;; (search . " %i %-12:c")
                            ))
@@ -129,7 +155,8 @@
                             :scheduled today
                             :order 1
                             :discard(:anything)
-                            ))
+                            )
+                           (:discard(:anything)))
                          ))
                     )
 
@@ -140,14 +167,65 @@
                          (org-super-agenda-groups
                           '(
                             (:name " Missed "
-                             :date today
                              :scheduled past
-                             :order 1)
+                             :date today
+                             :order 1
+                             )
                             (:discard (:anything)))
                           ))
                      )
             );;view container end
            );; concise view container end
+          ("p" "Night Planning View"
+           (;; view container
+            (agenda "" ((org-agenda-overriding-header "Plan ahead. ") ;;(org-agenda-remove-tags)
+                        ;; (org-agenda-scheduled-leaders '( '(defun org-agenda-get-category-icon) "          "))
+                        ;; (org-agenda-prefix-format " %i %?-2 t%s")
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "   %?-12t% s")
+                           ;; (timeline  . " %?-i % s")
+                           ;; (todo  . " %c")
+                           ;; (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-time-grid '((weekly)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                        (org-agenda-span 2)
+                        (org-agenda-start-day "+1d")
+                        (org-super-agenda-groups
+                         '((:name " Tomorrow and Day After"
+                            :time-grid t
+                            :order 1
+                            )
+                           )
+                         ))
+                    )
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-agenda-remove-tags)
+                         (org-agenda-prefix-format "  %i %?-2 t%s")
+                         (org-super-agenda-groups
+                          '(
+                            (:name "  Deadlines Approaching "
+                             :deadline future
+                             :order 1
+                             )
+                            (:discard(:anything))
+                            )))
+                     )
+
+
+
+            (alltodo "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
+                         (org-agenda-scheduled-leaders '("" "          "))
+                         (org-agenda-prefix-format " %i %?-2 t%s")
+                         ;; (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                         (org-super-agenda-groups
+                          '((:auto-parent t))
+                          ))
+                     )
+            );;view container end
+           )
           ("e" "Tomes & Learning"
            (
             (alltodo "NEXT" ((org-agenda-overriding-header " Stay Focused ")
@@ -249,20 +327,36 @@
             ;;         )
             ) ;; container end
            ) ;; week container end
+          ("q" "Quarter Overview"
+           (
+            (agenda "" ((org-agenda-overriding-header " Here's Your Week ")
+                        (org-agenda-remove-tags)
+                        (org-agenda-show-all-dates nil)
+                        (org-agenda-entry-types '(:deadline))
+                        (org-agenda-span 100) ;; 14 weeks
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "  %?-12t% s")
+                           ;; (timeline  . " %?-i % s")
+                           ;; (todo  . " %c")
+                           (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-start-day "-1d")
+                        (org-super-agenda-groups
+                         '((:log t)
+                           (:name " "
+                            :time-grid nil
+                            :deadline future
+                            :discard (:not (:deadline future))
+                            :order 1)
+                           )
+                         )))
+
+            ) ;; container end
+           );; quarter view
           );; all views container end
-        ;; (alltodo "" ((org-agenda-overriding-header "Daily Review")
-        ;;              (org-super-agenda-groups
-        ;;               '((:log t)
-        ;;                 ;; (:name "To refile"
-        ;;                 ;;        :file-path "captures/todo.org"))
-        ;;                 (:name "Overdue"
-        ;;                  :deadline past
-        ;;                  :order 7)
-        ;;                 (:name "Meetings"
-        ;;                  :and (:tag "MEETING" :scheduled future)
-        ;;                  :order 10)
-        ;;                 )))
-        ;;          )
         );; setq container end
 
 
@@ -307,12 +401,21 @@
                                                    ("plan" "~/Dropbox/Apps/png/filter-1.png" nil nil :ascent center)
                                                    )))
 
+(after! org
+  (setq
+   +org-capture-notes-file "captures/notes.org"
+   +org-capture-todo-file "captures/todo.org"
+
+   ;; Templates
+   )
+  )
+
 (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
 (setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
 (setq org-ref-notes-directory org-papers)
 (setq org-ref-bibliography-notes (concat org-papers "master.org"))
 (setq org-ref-completion-library 'org-ref-ivy-cite-completion)
-(setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-ivy-bibtex)
+(setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
 (setq org-ref-notes-function 'orb-edit-notes)
 
 (use-package! ivy-bibtex

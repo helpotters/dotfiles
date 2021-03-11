@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("~/Dropbox/org/projects/personal/personal.org" "/home/helpotters/Dropbox/org/journal.org"))
+   '("~/Dropbox/org/projects/personal/personal.org" "~/Dropbox/org/projects/personal/education.org"))
  '(org-agenda-time-grid
    '((daily today require-timed)
      (800 1000 1200 1400 1600 1800 2000)
