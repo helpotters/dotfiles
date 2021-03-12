@@ -31,15 +31,15 @@
                           (eq buffer-file-coding-system 'utf-8)))))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
+(setq fancy-splash-image "~/.doom.d/black-hole.png" )
 
-
-    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
-    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
-    (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
-    (global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
-    (global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
-    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
-    (global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
+(global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+(global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
+(global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
+(global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
+(global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+(global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
 
 
 

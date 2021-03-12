@@ -54,7 +54,7 @@ Let's initialize our personal information so that we can mark our documents for 
 
 *** Splash Screen
 #+BEGIN_SRC elisp
-
+(setq fancy-splash-image "~/.doom.d/black-hole.png" )
 #+END_SRC
 *** Keybindings
 #+BEGIN_SRC elisp
