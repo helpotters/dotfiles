@@ -31,8 +31,6 @@
                           (eq buffer-file-coding-system 'utf-8)))))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
-(setq fancy-splash-image "~/.doom.d/black-hole.png" )
-
 (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
 (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
 (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
@@ -41,7 +39,7 @@
 (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
 (global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
 
-
+(setq fancy-splash-image "~/.doom.d/black-hole.png")
 
 (setq  doom-font (font-spec :family "JetBrains Mono" :size 18)
        doom-big-font (font-spec :family "JetBrains Mono" :size 36))
@@ -49,9 +47,7 @@
 (setq display-line-numbers-type 'relative)
 
 (setq org-base (expand-file-name "~/Dropbox/org/"))
-(setq org-slip-box (expand-file-name (concat org-base "roam/")))
 (setq org-papers (expand-file-name (concat org-base "papers/")))
-
 (setq org-directory org-base)
 
 (setq org-hide-emphasis-markers t)
@@ -66,8 +62,8 @@
                         "WAITING(w@)"
                         "PROJ(p@)"
                         "|"
-                        "DONE(d@)"
-                        "CANCELED(c@/!)"
+                        "DONE(d)"
+                        "CANCELED(c!)"
                         ))
    )
   )
@@ -99,23 +95,23 @@
   )
 
 (use-package! org-super-agenda
+  :defer t
   :after org-agenda
   :init
   (setq org-agenda-custom-commands
         '( ;; all container
           ("c" "Concise Day View"
            (;; view container
-            (alltodo "" ((org-agenda-overriding-header "")
-                         (org-agenda-remove-tags)
-                         (org-agenda-prefix-format "  %i %?-2 t%s")
-                         (org-super-agenda-groups
-                          '((:name " Habits"
-                             :discard (:not (:habit t :and (:todo "REPEAT")))
-                             :scheduled today
-                             :order 1
-                             )
-                            (:discard (:anything))
-                            )))
+            (alltodo "REPEAT" ((org-agenda-overriding-header "")
+                               (org-agenda-remove-tags)
+                               (org-agenda-prefix-format "  %i %?-2 t%s")
+                               (org-super-agenda-groups
+                                '((:name " Habits"
+                                   :discard (:not (:habit t :and (:todo "REPEAT")))
+                                   :scheduled today
+                                   :order 1
+                                   )
+                                  )))
                      )
 
             (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
@@ -171,11 +167,13 @@
                              :date today
                              :order 1
                              )
-                            (:discard (:anything)))
-                          ))
-                     )
+                            (:discard (:anything))
+                            ))
+                         )
+                     );; container end
             );;view container end
            );; concise view container end
+
           ("p" "Night Planning View"
            (;; view container
             (agenda "" ((org-agenda-overriding-header "Plan ahead. ") ;;(org-agenda-remove-tags)
@@ -225,7 +223,7 @@
                           ))
                      )
             );;view container end
-           )
+           );;nightly end
           ("e" "Tomes & Learning"
            (
             (alltodo "NEXT" ((org-agenda-overriding-header " Stay Focused ")
@@ -254,7 +252,7 @@
             ;;             )
             ;;         )
             ) ;; container end
-           )
+           );;tomes end
           ("d" "Daily Glance"
            (
             (alltodo "" ((org-agenda-overriding-header "")
@@ -405,7 +403,6 @@
   (setq
    +org-capture-notes-file "captures/notes.org"
    +org-capture-todo-file "captures/todo.org"
-
    ;; Templates
    )
   )
@@ -419,9 +416,10 @@
 (setq org-ref-notes-function 'orb-edit-notes)
 
 (use-package! ivy-bibtex
+  :defer t
   :after org
   :config
-)
+  )
 (setq
  bibtex-completion-bibliography (concat org-base "papers/master.bib")
  bibtex-completion-pdf-field "file"
@@ -430,12 +428,14 @@
  )
 
 (use-package! org-noter
+  :defer t
   :after (:any org pdf-view)
   :config
   (setq
    pdf-view-midnight-minor-mode t))
 
 (use-package! org-journal
+  :defer t
   :after org
   :config
         (setq
@@ -446,45 +446,14 @@
         org-journalfile-format "%Y-%m-%d.org")
 )
 
-
-
-(use-package! org-roam
-  :after org
-  :init
-  (setq org-roam-directory org-slip-box)
-  )
-
-(use-package! org-roam-bibtex
-  :after org-roam
-  :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :bind (:map org-mode-map
-         (("C-c n a" . orb-note-actions))))
-(setq orb-templates
-      '(("r" "ref" plain (function org-roam-capture--get-point) ""
-         :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
-         :unnarrowed t)))
-(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
-
-(setq orb-templates
-      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
-         ""
-         :file-name "${slug}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
-
-- tags ::
-- keywords :: ${keywords}
-\* ${title}
-:PROPERTIES:
-:Custom_ID: ${citekey}
-:URL: ${url}
-:AUTHOR: ${author-or-editor}
-:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
-:NOTER_PAGE:
-:END:")))
+;; (use-package! org-roam
+;;   :after org
+;;   :defer t
+;;   :config
+;;   (setq org-roam-db-location "~/Dropbox/org/"))
 
 (use-package! org-roam-server
+  :defer t
   :after org-roam
   :config
   (setq org-roam-server-host "127.0.0.1"

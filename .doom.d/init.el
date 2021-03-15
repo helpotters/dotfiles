@@ -21,14 +21,14 @@
 
        :completion
        company           ; the ultimate code completion backend
-       ;; helm              ; the *other* search engine for love and life
-        ;; +icons
+       ;; (helm              ; the *other* search engine for love and life
+       ;;  +icons)
 
        ;; ido               ; the other *other* search engine...
        (ivy               ; a search engine for love and life
-       ;;  ;; +fuzzy
-       ;;  ;; +childframe
-        +icons)
+       ;; ;;  ;; +fuzzy
+       ;; ;;  ;; +childframe
+         +icons)
 
        :ui
        deft              ; notational velocity for Emacs
@@ -123,7 +123,7 @@
        ;;cc                ; C/C++/Obj-C madness
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
-       coq               ; proofs-as-programs
+       ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
        ;;data              ; config/data formats
@@ -159,13 +159,14 @@
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org               ; organize your plain life in plain text
-        +roam
+        +biblio
         +journal
         +pretty
         +pandoc
         +noter
         +hugo
-        +present)
+        +present
+        +roam)
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional

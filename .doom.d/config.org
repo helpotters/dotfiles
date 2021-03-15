@@ -52,10 +52,6 @@ Let's initialize our personal information so that we can mark our documents for 
 
 #+RESULTS:
 
-*** Splash Screen
-#+BEGIN_SRC elisp
-(setq fancy-splash-image "~/.doom.d/black-hole.png" )
-#+END_SRC
 *** Keybindings
 #+BEGIN_SRC elisp
     (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
@@ -70,7 +66,7 @@ Let's initialize our personal information so that we can mark our documents for 
 ** Theming
 *** Splash Screen
 #+BEGIN_SRC elisp
-
+(setq fancy-splash-image "~/.doom.d/black-hole.png")
 #+END_SRC
 *** Colors
 *** Fonts
@@ -83,16 +79,13 @@ Rather than just counting the numbers from 1-XXX, we can set it relative to the 
 #+BEGIN_SRC elisp
 (setq display-line-numbers-type 'relative)
 #+END_SRC
-
 * Package Configuration
 ** Org-Mode
 *** Rudimentary
 **** Directories
 #+BEGIN_SRC elisp
 (setq org-base (expand-file-name "~/Dropbox/org/"))
-(setq org-slip-box (expand-file-name (concat org-base "roam/")))
 (setq org-papers (expand-file-name (concat org-base "papers/")))
-
 (setq org-directory org-base)
 
 (setq org-hide-emphasis-markers t)
@@ -111,8 +104,8 @@ We need rewrite the keywords that our agenda utilizes for todo tasks: namely we 
                         "WAITING(w@)"
                         "PROJ(p@)"
                         "|"
-                        "DONE(d@)"
-                        "CANCELED(c@/!)"
+                        "DONE(d)"
+                        "CANCELED(c!)"
                         ))
    )
   )
@@ -162,23 +155,23 @@ Now we'll also configure some basic point abouts our agenda-view, namely the def
 We are breaking up our org-agenda into multiple views, the most important one being our daily view, followed by our nightly and weekly reviews.
 #+BEGIN_SRC elisp
 (use-package! org-super-agenda
+  :defer t
   :after org-agenda
   :init
   (setq org-agenda-custom-commands
         '( ;; all container
           ("c" "Concise Day View"
            (;; view container
-            (alltodo "" ((org-agenda-overriding-header "")
-                         (org-agenda-remove-tags)
-                         (org-agenda-prefix-format "  %i %?-2 t%s")
-                         (org-super-agenda-groups
-                          '((:name " Habits"
-                             :discard (:not (:habit t :and (:todo "REPEAT")))
-                             :scheduled today
-                             :order 1
-                             )
-                            (:discard (:anything))
-                            )))
+            (alltodo "REPEAT" ((org-agenda-overriding-header "")
+                               (org-agenda-remove-tags)
+                               (org-agenda-prefix-format "  %i %?-2 t%s")
+                               (org-super-agenda-groups
+                                '((:name " Habits"
+                                   :discard (:not (:habit t :and (:todo "REPEAT")))
+                                   :scheduled today
+                                   :order 1
+                                   )
+                                  )))
                      )
 
             (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
@@ -234,11 +227,13 @@ We are breaking up our org-agenda into multiple views, the most important one be
                              :date today
                              :order 1
                              )
-                            (:discard (:anything)))
-                          ))
-                     )
+                            (:discard (:anything))
+                            ))
+                         )
+                     );; container end
             );;view container end
            );; concise view container end
+
           ("p" "Night Planning View"
            (;; view container
             (agenda "" ((org-agenda-overriding-header "Plan ahead. ") ;;(org-agenda-remove-tags)
@@ -288,7 +283,7 @@ We are breaking up our org-agenda into multiple views, the most important one be
                           ))
                      )
             );;view container end
-           )
+           );;nightly end
           ("e" "Tomes & Learning"
            (
             (alltodo "NEXT" ((org-agenda-overriding-header " Stay Focused ")
@@ -317,7 +312,7 @@ We are breaking up our org-agenda into multiple views, the most important one be
             ;;             )
             ;;         )
             ) ;; container end
-           )
+           );;tomes end
           ("d" "Daily Glance"
            (
             (alltodo "" ((org-agenda-overriding-header "")
@@ -473,7 +468,6 @@ We are breaking up our org-agenda into multiple views, the most important one be
   (setq
    +org-capture-notes-file "captures/notes.org"
    +org-capture-todo-file "captures/todo.org"
-
    ;; Templates
    )
   )
@@ -492,9 +486,10 @@ We are breaking up our org-agenda into multiple views, the most important one be
 We are utilizing Zotero for managing our library. org-ref is fantastic, however it is not great at managing tags, links, and especially sci-hub integration.
 #+BEGIN_SRC elisp
 (use-package! ivy-bibtex
+  :defer t
   :after org
   :config
-)
+  )
 (setq
  bibtex-completion-bibliography (concat org-base "papers/master.bib")
  bibtex-completion-pdf-field "file"
@@ -505,6 +500,7 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 *** org-noter
 #+BEGIN_SRC elisp
 (use-package! org-noter
+  :defer t
   :after (:any org pdf-view)
   :config
   (setq
@@ -513,6 +509,7 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 *** org-journal
 #+BEGIN_SRC elisp
 (use-package! org-journal
+  :defer t
   :after org
   :config
         (setq
@@ -524,54 +521,20 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 )
 #+END_SRC
 
-*** org-bullets
-#+begin_src elisp
-#+end_src
 *** org-roam
-**** Directories
-        #+BEGIN_SRC elisp
-(use-package! org-roam
-  :after org
-  :init
-  (setq org-roam-directory org-slip-box)
-  )
-        #+END_SRC
 **** org-roam-bibtex
-Connects my org-roam to actual documents for networking.
-#+BEGIN_SRC elisp
-(use-package! org-roam-bibtex
-  :after org-roam
-  :load-path "~/Dropbox/org/papers/master.bib" ;Modify with your own path
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :bind (:map org-mode-map
-         (("C-c n a" . orb-note-actions))))
-(setq orb-templates
-      '(("r" "ref" plain (function org-roam-capture--get-point) ""
-         :file-name "${citekey}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n" ; <--
-         :unnarrowed t)))
-(setq orb-preformat-keywords   '(("citekey" . "=key=") "title" "url" "file" "author-or-editor" "keywords"))
-
-(setq orb-templates
-      '(("n" "ref+noter" plain (function org-roam-capture--get-point)
-         ""
-         :file-name "${slug}"
-         :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}\n#+ROAM_TAGS:
-
-- tags ::
-- keywords :: ${keywords}
-\* ${title}
-:PROPERTIES:
-:Custom_ID: ${citekey}
-:URL: ${url}
-:AUTHOR: ${author-or-editor}
-:NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")
-:NOTER_PAGE:
-:END:")))
-#+END_SRC
+**** Setup
+#+begin_src elisp
+;; (use-package! org-roam
+;;   :after org
+;;   :defer t
+;;   :config
+;;   (setq org-roam-db-location "~/Dropbox/org/"))
+#+end_src
 **** org-roam-server
 #+BEGIN_SRC elisp
 (use-package! org-roam-server
+  :defer t
   :after org-roam
   :config
   (setq org-roam-server-host "127.0.0.1"
