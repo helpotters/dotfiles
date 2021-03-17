@@ -108,8 +108,10 @@
                                (org-super-agenda-groups
                                 '((:name " Habits"
                                    :discard (:not (:habit t :and (:todo "REPEAT")))
+                                   :habit t
                                    :scheduled today
                                    :order 1
+                                   :discard (:anything)
                                    )
                                   )))
                      )
@@ -415,17 +417,15 @@
 (setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
 (setq org-ref-notes-function 'orb-edit-notes)
 
-(use-package! ivy-bibtex
-  :defer t
-  :after org
+(after! ivy-bibtex
   :config
+  (setq
+   bibtex-completion-bibliography (concat org-base "papers/master.bib")
+   bibtex-completion-pdf-field "file"
+   bibtex-completion-library-path (concat org-papers "zotero/storage/")
+   bibtex-completion-notes-path (concat org-base "papers/")
+   )
   )
-(setq
- bibtex-completion-bibliography (concat org-base "papers/master.bib")
- bibtex-completion-pdf-field "file"
- bibtex-completion-library-path (concat org-papers "zotero/storage/")
- bibtex-completion-notes-path (concat org-base "papers/")
- )
 
 (use-package! org-noter
   :defer t
@@ -445,12 +445,6 @@
         org-journal-date-format "%a, %Y-%m-%d"
         org-journalfile-format "%Y-%m-%d.org")
 )
-
-;; (use-package! org-roam
-;;   :after org
-;;   :defer t
-;;   :config
-;;   (setq org-roam-db-location "~/Dropbox/org/"))
 
 (use-package! org-roam-server
   :defer t

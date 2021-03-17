@@ -15,7 +15,10 @@
 (package! org-fragtog)
 (package! org-pretty-tags)
 (package! golden-ratio)
-;; (package! org-ref)
+
+(package! ivy-bibtex)
+;; (package! bibtex-actions
+;;   :recipe (:host github :repo "bdarcus/bibtex-actions"))
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:

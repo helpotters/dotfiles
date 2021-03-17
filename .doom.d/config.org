@@ -150,7 +150,6 @@ Now we'll also configure some basic point abouts our agenda-view, namely the def
    )
   )
 #+END_SRC
-
 **** org-super-agenda
 We are breaking up our org-agenda into multiple views, the most important one being our daily view, followed by our nightly and weekly reviews.
 #+BEGIN_SRC elisp
@@ -168,8 +167,10 @@ We are breaking up our org-agenda into multiple views, the most important one be
                                (org-super-agenda-groups
                                 '((:name " Habits"
                                    :discard (:not (:habit t :and (:todo "REPEAT")))
+                                   :habit t
                                    :scheduled today
                                    :order 1
+                                   :discard (:anything)
                                    )
                                   )))
                      )
@@ -482,20 +483,18 @@ We are breaking up our org-agenda into multiple views, the most important one be
 (setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
 (setq org-ref-notes-function 'orb-edit-notes)
 #+END_SRC
-**** ivy-bibtex
+****  Ivy-bibtex
 We are utilizing Zotero for managing our library. org-ref is fantastic, however it is not great at managing tags, links, and especially sci-hub integration.
 #+BEGIN_SRC elisp
-(use-package! ivy-bibtex
-  :defer t
-  :after org
+(after! ivy-bibtex
   :config
+  (setq
+   bibtex-completion-bibliography (concat org-base "papers/master.bib")
+   bibtex-completion-pdf-field "file"
+   bibtex-completion-library-path (concat org-papers "zotero/storage/")
+   bibtex-completion-notes-path (concat org-base "papers/")
+   )
   )
-(setq
- bibtex-completion-bibliography (concat org-base "papers/master.bib")
- bibtex-completion-pdf-field "file"
- bibtex-completion-library-path (concat org-papers "zotero/storage/")
- bibtex-completion-notes-path (concat org-base "papers/")
- )
 #+END_SRC
 *** org-noter
 #+BEGIN_SRC elisp
@@ -523,14 +522,6 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
 
 *** org-roam
 **** org-roam-bibtex
-**** Setup
-#+begin_src elisp
-;; (use-package! org-roam
-;;   :after org
-;;   :defer t
-;;   :config
-;;   (setq org-roam-db-location "~/Dropbox/org/"))
-#+end_src
 **** org-roam-server
 #+BEGIN_SRC elisp
 (use-package! org-roam-server
