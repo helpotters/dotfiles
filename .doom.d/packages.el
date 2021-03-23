@@ -15,8 +15,9 @@
 (package! org-fragtog)
 (package! org-pretty-tags)
 (package! golden-ratio)
-
+(package! org-ref)
 (package! ivy-bibtex)
+(package! org-roam-server)
 ;; (package! bibtex-actions
 ;;   :recipe (:host github :repo "bdarcus/bibtex-actions"))
 

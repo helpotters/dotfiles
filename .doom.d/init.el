@@ -80,10 +80,10 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       ;; eshell            ; the elisp shell that works everywhere
-       ;;shell             ; simple shell REPL for Emacs
-       ;;term              ; basic terminal emulator for Emacs
-       ;; vterm             ; the best terminal emulation in Emacs
+       ;;  eshell            ; the elisp shell that works everywhere
+       ;; shell             ; simple shell REPL for Emacs
+        term              ; basic terminal emulator for Emacs
+       ;;vterm             ; the best terminal emulation in Emacs
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
@@ -93,7 +93,8 @@
        :tools
        ;;ansible
        biblio
-       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       (debugger          ; FIXME stepping through code, to help you add bugs
+        +lsp)
        ;;direnv
        ;;docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
@@ -144,11 +145,13 @@
        ;;idris             ; a language you can depend on
        ;;json              ; At least it ain't XML
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       (javascript        ; all(hope(abandon(ye(who(enter(here))))))
+        +lsp)
        julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        (latex             ; writing papers in Emacs has never been so fun
         +fold
+        +lsp
         +latexmk
         +cdlatex)
        ;;lean
@@ -161,6 +164,7 @@
        ;;ocaml             ; an objective camel
        (org               ; organize your plain life in plain text
         +journal
+        +pomodoro
         +pretty
         +pandoc
         +noter
@@ -190,6 +194,7 @@
        ;;terra             ; Earth and Moon in alignment for performance.
        (web               ; the tubes
         +css
+        +lsp
         +html)
        ;;yaml              ; JSON, but readable
 

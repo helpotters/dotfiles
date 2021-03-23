@@ -86,7 +86,7 @@
    org-agenda-skip-scheduled-if-done t
    org-agenda-skip-deadline-if-done t
    org-agenda-skip-timestamp-if-done t
-   org-agenda-current-time-string "Now"
+   org-agenda-current-time-string " Now "
    ;; org-agenda-breadcrumbs-separator ""
    org-agenda-block-separator '""
    org-agenda-span 1
@@ -107,13 +107,12 @@
                                (org-agenda-prefix-format "  %i %?-2 t%s")
                                (org-super-agenda-groups
                                 '((:name " Habits"
-                                   :discard (:not (:habit t :and (:todo "REPEAT")))
-                                   :habit t
+                                   :discard (:not (:habit t))
                                    :scheduled today
-                                   :order 1
-                                   :discard (:anything)
-                                   )
-                                  )))
+                                   :order 1)
+                                  (:discard (:anything)))
+                                ))
+
                      )
 
             (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
@@ -126,22 +125,10 @@
                         (org-agenda-prefix-format
                          '(
                            ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
-                           (agenda  . "  %?-12t% s")
-                           (timeline  . " %?-i % s")
-                           ;; (todo  . "(foo)")
-                           ;; (tags  . " %i %-12:c")
-                           ;; (search . " %i %-12:c")
-                           ))
-                        (org-agenda-prefix-format
-
-                         )
-                        (org-agenda-prefix-format
-                         '(
-                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
-                           (agenda  . "   %?-12t% s")
-                           (timeline  . " %?-i % s")
-                           (todo  . " %c-:i")
-                           ;; (tags  . " %i %-12:c")
+                           (agenda  . "  %?-12t% i")
+                           ;; (timeline  . " %?-12e")
+                           (todo  . " %5e ")
+                           ;; (tags  . " %?-12 e%i")
                            ;; (search . " %i %-12:c")
                            ))
                         (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
@@ -238,10 +225,10 @@
                                  :todo "NEXT"
                                  :order 1)
                                 (:name " Assignments"
-                                 :category "assignment"
-                                 :todo "NEXT"
+                                 :category "homework"
                                  :order 2)
-                                (:discard (:anything)))
+                                (:discard (:anything))
+                                )
                               )))
 
 
@@ -409,13 +396,15 @@
    )
   )
 
-(setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
-(setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
-(setq org-ref-notes-directory org-papers)
-(setq org-ref-bibliography-notes (concat org-papers "master.org"))
-(setq org-ref-completion-library 'org-ref-ivy-cite-completion)
-(setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
-(setq org-ref-notes-function 'orb-edit-notes)
+(after! org-ref
+  :config
+  (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
+  (setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
+  (setq org-ref-notes-directory org-papers)
+  (setq org-ref-bibliography-notes (concat org-papers "master.org"))
+  (setq org-ref-completion-library 'org-ref-ivy-cite-completion)
+  (setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
+  )
 
 (after! ivy-bibtex
   :config
