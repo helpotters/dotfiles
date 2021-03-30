@@ -68,6 +68,16 @@
    )
   )
 
+(after! org
+  (setq
+   org-highest-priority ?A ;; urgent and important
+   org-default-priority ?B ;; urgent but not important
+   ;; C important but not urgent
+   org-lowest-priority ?D ;; not urgent and not important
+   org-fancy-priorities-list '("", "", "", "")
+   )
+  )
+
 (setq enable-local-eval t)
 (setq safe-local-eval-forms '((progn (org-agenda-list) (other-window 1))))
 (setq org-log-into-drawer t)
@@ -127,8 +137,8 @@
                            ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
                            (agenda  . "  %?-12t% i")
                            ;; (timeline  . " %?-12e")
-                           (todo  . " %5e ")
-                           ;; (tags  . " %?-12 e%i")
+                           ;; (todo  . " %?-12e ")
+                           (tags  . " %?-12i")
                            ;; (search . " %i %-12:c")
                            ))
                         (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))

@@ -110,6 +110,18 @@ We need rewrite the keywords that our agenda utilizes for todo tasks: namely we 
    )
   )
 #+END_SRC
+**** Priorities
+#+begin_src elisp
+(after! org
+  (setq
+   org-highest-priority ?A ;; urgent and important
+   org-default-priority ?B ;; urgent but not important
+   ;; C important but not urgent
+   org-lowest-priority ?D ;; not urgent and not important
+   org-fancy-priorities-list '("", "", "", "")
+   )
+  )
+#+end_src
 **** Quality of Life
 #+BEGIN_SRC elisp
 (setq enable-local-eval t)
@@ -186,8 +198,8 @@ We are breaking up our org-agenda into multiple views, the most important one be
                            ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
                            (agenda  . "  %?-12t% i")
                            ;; (timeline  . " %?-12e")
-                           (todo  . " %5e ")
-                           ;; (tags  . " %?-12 e%i")
+                           ;; (todo  . " %?-12e ")
+                           (tags  . " %?-12i")
                            ;; (search . " %i %-12:c")
                            ))
                         (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
@@ -529,5 +541,3 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
         org-roam-server-network-label-truncate-length 60
         org-roam-server-network-label-wrap-length 20))
 #+END_SRC
-** Ruby
-I'm leaving most of Ruby as the default configuration.
