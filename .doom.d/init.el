@@ -74,7 +74,6 @@
 
        :emacs
        (dired             ; making dired pretty [functional]
-        +ranger
         +icons)
        electric          ; smarter, keyword-based electric-indent
        (ibuffer +icons)         ; interactive buffer management
@@ -90,13 +89,15 @@
        :checkers
        syntax              ; tasing you for every semicolon you forget
        (spell             ; tasing you for misspelling mispelling
-        +hunspell)
+        +flyspell
+        +aspell)
        grammar           ; tasing grammar mistake every you make
 
        :tools
        ;;ansible
        biblio
-       ;; debugger          ; FIXME stepping through code, to help you add bugs
+       (debugger          ; FIXME stepping through code, to help you add bugs
+        +lsp)
        ;;direnv
        ;;docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces

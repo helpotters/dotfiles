@@ -41,6 +41,8 @@
 
 (setq fancy-splash-image "~/.doom.d/black-hole.png")
 
+(setq doom-theme 'doom-dracula)
+
 (setq  doom-font (font-spec :family "JetBrains Mono" :size 18)
        doom-big-font (font-spec :family "JetBrains Mono" :size 36))
 
@@ -68,7 +70,7 @@
    )
   )
 
-(after! org
+(after! org-fancy-priorities
   (setq
    org-highest-priority ?A ;; urgent and important
    org-default-priority ?B ;; urgent but not important
@@ -126,12 +128,6 @@
                      )
 
             (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
-                        ;; (defun foo ()
-                        ;;   (let ((x (nth 1 (org-agenda-get-category))))
-                        ;;     (if x
-                        ;;         (concat "[ " (org-agenda-get-category-icon(list x)) " ]")
-                        ;;       "")))
-
                         (org-agenda-prefix-format
                          '(
                            ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
@@ -141,7 +137,7 @@
                            (tags  . " %?-12i")
                            ;; (search . " %i %-12:c")
                            ))
-                        (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                        (org-agenda-time-grid '((today)(600 800 1000 1200 1400 1600 1800 2000) "   " ""))
                         (org-super-agenda-groups
                          '((:name " Today's Schedule "
                             :discard (:property "STYLE")
@@ -187,7 +183,7 @@
                            ;; (tags  . " %i %-12:c")
                            ;; (search . " %i %-12:c")
                            ))
-                        (org-agenda-time-grid '((weekly)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                        (org-agenda-time-grid '((weekly)(600 800 1000 1200 1400 1600 1800 2000) "   " ""))
                         (org-agenda-span 2)
                         (org-agenda-start-day "+1d")
                         (org-super-agenda-groups
@@ -242,14 +238,15 @@
                               )))
 
 
-            ;; (agenda "" ((org-agenda-overriding-header "Important Dates")
-            ;;             (org-super-agenda-groups
-            ;;              '((:name "Exams "
-            ;;                 :time-grid t
-            ;;                 :order 3)
-            ;;                (:discard (:anything))))
-            ;;             )
-            ;;         )
+            (agenda "" ((org-agenda-overriding-header "Important Dates")
+                        (org-super-agenda-groups
+                         '((:name "Exams "
+                            :time-grid t
+                            :tag "exam"
+                            :order 3)
+                           (:discard (:anything))))
+                        )
+                    )
             ) ;; container end
            );;tomes end
           ("d" "Daily Glance"
@@ -303,7 +300,8 @@
                            (:name " "
                             :scheduled future
                             :todo "TODO"
-                            :order 1)
+                            :order 1
+                            :discard (:todo "REPEAT"))
                            ;; (:name " Assignments"
                            ;;  :children t
                            ;;  :auto-parent 't
@@ -326,7 +324,7 @@
            ) ;; week container end
           ("q" "Quarter Overview"
            (
-            (agenda "" ((org-agenda-overriding-header " Here's Your Week ")
+            (agenda "" ((org-agenda-overriding-header " Quarterly Overview")
                         (org-agenda-remove-tags)
                         (org-agenda-show-all-dates nil)
                         (org-agenda-entry-types '(:deadline))
@@ -360,6 +358,9 @@
   :config
   (org-super-agenda-mode)
   ) ;; use package end
+
+(after! org-agenda
+  (org-super-agenda-mode))
 
 ;; (after! org
 ;;   (setq
@@ -437,13 +438,13 @@
   :defer t
   :after org
   :config
-        (setq
-        org-journal-dir (concat org-base "journal/")
-        org-journal-date-prefix "#+TITLE: "
-        org-journal-time-prefix "* "
-        org-journal-date-format "%a, %Y-%m-%d"
-        org-journalfile-format "%Y-%m-%d.org")
-)
+  (setq
+   org-journal-dir (concat org-base "journal/")
+   org-journal-date-prefix "#+TITLE: "
+   org-journal-time-prefix "* "
+   org-journal-date-format "%a, %Y-%m-%d"
+   org-journal-file-format "%Y-%m-%d.org")
+  )
 
 (use-package! org-roam-server
   :defer t

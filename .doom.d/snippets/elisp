@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: elisp
+# uuid: elisp 
+# key: trigger-key
+# condition: t
+# --
+#+BEGIN_SRC elisp
+#+END_SRC
