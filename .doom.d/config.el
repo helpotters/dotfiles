@@ -139,14 +139,21 @@
                            ))
                         (org-agenda-time-grid '((today)(600 800 1000 1200 1400 1600 1800 2000) "   " ""))
                         (org-super-agenda-groups
-                         '((:name " Today's Schedule "
+                         '((:name " Daily Studies "
+                            :discard (:deadline future)
+                            :tag "study"
+                            :order 3
+                            )
+                           (:name " Today's Schedule "
                             :discard (:property "STYLE")
+                            :discard(:tag "study")
                             :time-grid t
                             :date today
                             :scheduled today
-                            :order 1
+                            :order 2
                             :discard(:anything)
                             )
+
                            (:discard(:anything)))
                          ))
                     )
@@ -221,32 +228,31 @@
            );;nightly end
           ("e" "Tomes & Learning"
            (
-            (alltodo "NEXT" ((org-agenda-overriding-header " Stay Focused ")
+            (alltodo "NEXT" ((org-agenda-overriding-header " Academic Summary ")
                              (org-agenda-remove-tags)
                              (org-agenda-prefix-format "  %i %?-2 t%s")
                              (org-super-agenda-groups
                               '((:log t)
                                 (:name " Readings "
-                                 :discard(:not (:category "reading"))
-                                 :todo "NEXT"
+                                 :and (:tag "reading" :todo "NEXT")
                                  :order 1)
                                 (:name " Assignments"
-                                 :category "homework"
+                                 :tag "homework"
                                  :order 2)
                                 (:discard (:anything))
                                 )
                               )))
 
 
-            (agenda "" ((org-agenda-overriding-header "Important Dates")
-                        (org-super-agenda-groups
-                         '((:name "Exams "
-                            :time-grid t
-                            :tag "exam"
-                            :order 3)
-                           (:discard (:anything))))
-                        )
-                    )
+            (alltodo "NEXT" ((org-agenda-overriding-header "Important Dates")
+                             (org-super-agenda-groups
+
+                              '((:name "Exams "
+                                 :and (:todo "NEXT" :tag "exam")
+                                 :order 3)
+                                (:discard (:anything))))
+                             )
+                     )
             ) ;; container end
            );;tomes end
           ("d" "Daily Glance"
