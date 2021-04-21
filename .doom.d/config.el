@@ -242,7 +242,7 @@
                                  :and (:tag "reading" :todo "NEXT")
                                  :order 1)
                                 (:name " Assignments"
-                                 :and (:tag "homework" :todo "NEXT")
+                                 :and (:tag "assignment" :todo "NEXT")
                                  :discard (:not (:scheduled nil))
                                  :order 2)
                                 (:discard (:anything))
