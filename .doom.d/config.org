@@ -191,8 +191,8 @@ Creating tasks is only as useful as the context we want to see them in.
                                 ))
 
                      )
-
-            (agenda "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
+            (agenda "" ((org-agenda-overriding-header "")
+                        (org-agenda-skip-deadline-prewarning-if-scheduled t)
                         (org-agenda-prefix-format
                          '(
                            ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
@@ -204,14 +204,18 @@ Creating tasks is only as useful as the context we want to see them in.
                            ))
                         (org-agenda-time-grid '((today)(600 800 1000 1200 1400 1600 1800 2000) "   " ""))
                         (org-super-agenda-groups
-                         '((:name " Daily Studies "
-                            :discard (:deadline future)
-                            :tag "study"
+                         '(
+                           (:name " Daily Studies "
+                            :and (:tag "study" :scheduled today :todo "REPEAT")
                             :order 3
+                            )
+                           (:name " Academic Tasks"
+                            :and (:tag "study" :scheduled today :todo "NEXT")
+                            :order 4
                             )
                            (:name " Today's Schedule "
                             :discard (:property "STYLE")
-                            :discard(:tag "study")
+                            :discard (:tag "study")
                             :time-grid t
                             :date today
                             :scheduled today
@@ -294,6 +298,7 @@ Creating tasks is only as useful as the context we want to see them in.
           ("e" "Tomes & Learning"
            (
             (alltodo "NEXT" ((org-agenda-overriding-header " Academic Summary ")
+                             (org-agenda-skip-deadline-prewarning-if-scheduled t)
                              (org-agenda-remove-tags)
                              (org-agenda-prefix-format "  %i %?-2 t%s")
                              (org-super-agenda-groups
@@ -302,22 +307,36 @@ Creating tasks is only as useful as the context we want to see them in.
                                  :and (:tag "reading" :todo "NEXT")
                                  :order 1)
                                 (:name " Assignments"
-                                 :tag "homework"
+                                 :and (:tag "homework" :todo "NEXT")
+                                 :discard (:not (:scheduled nil))
                                  :order 2)
                                 (:discard (:anything))
                                 )
                               )))
 
 
-            (alltodo "NEXT" ((org-agenda-overriding-header "Important Dates")
-                             (org-super-agenda-groups
-
-                              '((:name "Exams "
-                                 :and (:todo "NEXT" :tag "exam")
-                                 :order 3)
-                                (:discard (:anything))))
-                             )
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-agenda-span 'month)
+                         ;; (org-agenda-prefix-format " %i %?-2 t%2")
+                         (org-agenda-show-all-dates nil)
+                         (org-super-agenda-groups
+                          '((:name "Exams "
+                             :and (:todo "NEXT" :tag "exam")
+                             :order 3)
+                            (:discard (:anything))))
+                         )
                      )
+            (agenda "" ((org-agenda-overriding-header "")
+                        (org-agenda-skip-scheduled-if-deadline-is-shown t)
+                        (org-agenda-show-all-dates nil)
+                        (org-agenda-prefix-format "  %i %?-2 t%s")
+                        (org-super-agenda-groups
+                         '((:name "Deadlines "
+                            :and (:tag "study" :deadline future)
+                            :order 4)
+                           (:discard (:anything))))
+                        )
+                    )
             ) ;; container end
            );;tomes end
           ("d" "Daily Glance"
@@ -355,6 +374,7 @@ Creating tasks is only as useful as the context we want to see them in.
            (
             (agenda "" ((org-agenda-overriding-header " Here's Your Week ")
                         (org-agenda-remove-tags)
+                        (org-agenda-show-all-dates nil)
                         (org-agenda-span 7)
                         (org-agenda-prefix-format
                          '(
