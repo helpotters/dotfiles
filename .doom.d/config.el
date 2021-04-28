@@ -59,7 +59,7 @@
    org-todo-keywords '((sequence
                         "REPEAT(r)"
                         "NEXT(n)" ;; next task
-                        "TODO(t@)" ;; A task
+                        "TODO(t)" ;; A task
                         "PROG(g@)" ;; IN progress
                         "WAITING(w@)"
                         "PROJ(p@)"

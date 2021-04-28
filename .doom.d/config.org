@@ -103,7 +103,7 @@ We need rewrite the keywords that our agenda utilizes for todo tasks: namely we 
    org-todo-keywords '((sequence
                         "REPEAT(r)"
                         "NEXT(n)" ;; next task
-                        "TODO(t@)" ;; A task
+                        "TODO(t)" ;; A task
                         "PROG(g@)" ;; IN progress
                         "WAITING(w@)"
                         "PROJ(p@)"
