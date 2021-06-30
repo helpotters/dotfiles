@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: inline-latex
+# key: $
+# group: latex
+# --
+$$1$

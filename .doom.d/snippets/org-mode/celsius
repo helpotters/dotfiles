@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: celsius
+# uuid: 
+# key: dc
+# group: latex
+# --
+\degree C$1

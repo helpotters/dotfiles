@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name:latex begin align* 
+# key:lba 
+# group: latex
+# --
+#+begin_latex
+    \begin{align*}
+        $1
+    \end{align*}
+#+end_latex

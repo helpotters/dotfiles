@@ -32,12 +32,24 @@
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
 (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
-(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
-(global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
-(global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
-(global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
-(global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
-(global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
+    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+    (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
+    (global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
+    (global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
+    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+    (global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
+
+;; yasnippet
+        ;; creation
+(map! :leader
+      (:prefix ("y" . "yasnippet")
+      :desc "Create new snippet" "c" #'yas-new-snippet))
+        ;; Yasss fix
+    (defun toggle-final-newline ()
+    (interactive)
+    (setq mode-require-final-newline (not mode-require-final-newline)))
+(map! :leader
+      :desc "Toggle auto-newline" "t n" #'toggle-final-newline)
 
 (setq fancy-splash-image "~/.doom.d/black-hole.png")
 
@@ -150,7 +162,7 @@
                             )
                            (:name " Today's Schedule "
                             :discard (:property "STYLE")
-                            :discard (:tag "study")
+                            :discard (:and (:tag "study" :scheduled nil))
                             :time-grid t
                             :date today
                             :scheduled today
@@ -235,7 +247,7 @@
             (alltodo "NEXT" ((org-agenda-overriding-header " Academic Summary ")
                              (org-agenda-skip-deadline-prewarning-if-scheduled t)
                              (org-agenda-remove-tags)
-                             (org-agenda-prefix-format "  %i %?-2 t%s")
+                             (org-agenda-prefix-format "  %i %?-5 s%t")
                              (org-super-agenda-groups
                               '((:log t)
                                 (:name " Readings "
@@ -433,6 +445,41 @@
    )
   )
 
+(after! ox-latex
+  (add-to-list 'org-latex-classes
+               '("assignment"
+                 "\\documentclass[12pt,twocolumn]{exam}
+                                \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
+                                \\usepackage{chemist}
+                                \\usepackage{gensymb}
+                                \\usepackage{tikz}
+                                \\usepackage{pgfplots}
+                                \\usepackage{svg}
+                                \\pgfplotsset{compat=1.11}
+                                 "
+                 ("\\begin{questions}{%s}" . "\\begin{questions}{%s}")
+                 ("\\question{%s}" . "\\question*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+               )
+  (add-to-list 'org-latex-classes
+               '("lab"
+                 "\\documentclass[12pt]{article}
+                                \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
+                                \\usepackage{chemist}
+                                \\usepackage{gensymb}
+                                \\usepackage{tikz}
+                                \\usepackage{pgfplots}
+                                \\usepackage{svg}
+                                \\pgfplotsset{compat=1.11}
+                                 "
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
 (after! org-ref
   :config
   (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
@@ -486,4 +533,8 @@
         org-roam-server-network-arrows nil
         org-roam-server-network-label-truncate t
         org-roam-server-network-label-truncate-length 60
-        org-roam-server-network-label-wrap-length 20))
+        org-roam-server-network-label-wrap-length 20)
+  (unless (server-running-p)
+    (org-roam-server-mode))
+  )
+(require 'org-roam-protocol)

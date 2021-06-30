@@ -61,6 +61,18 @@ Let's initialize our personal information so that we can mark our documents for 
     (global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
     (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
     (global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
+
+;; yasnippet
+        ;; creation
+(map! :leader
+      (:prefix ("y" . "yasnippet")
+      :desc "Create new snippet" "c" #'yas-new-snippet))
+        ;; Yasss fix
+    (defun toggle-final-newline ()
+    (interactive)
+    (setq mode-require-final-newline (not mode-require-final-newline)))
+(map! :leader
+      :desc "Toggle auto-newline" "t n" #'toggle-final-newline)
 #+END_SRC
 * Doom Emacs Aesthetics
 ** Theming
@@ -215,7 +227,7 @@ Creating tasks is only as useful as the context we want to see them in.
                             )
                            (:name " Today's Schedule "
                             :discard (:property "STYLE")
-                            :discard (:tag "study")
+                            :discard (:and (:tag "study" :scheduled nil))
                             :time-grid t
                             :date today
                             :scheduled today
@@ -300,7 +312,7 @@ Creating tasks is only as useful as the context we want to see them in.
             (alltodo "NEXT" ((org-agenda-overriding-header " Academic Summary ")
                              (org-agenda-skip-deadline-prewarning-if-scheduled t)
                              (org-agenda-remove-tags)
-                             (org-agenda-prefix-format "  %i %?-2 t%s")
+                             (org-agenda-prefix-format "  %i %?-5 s%t")
                              (org-super-agenda-groups
                               '((:log t)
                                 (:name " Readings "
@@ -503,6 +515,43 @@ Creating tasks is only as useful as the context we want to see them in.
    )
   )
 #+END_SRC
+*** org-latex
+#+BEGIN_SRC elisp
+(after! ox-latex
+  (add-to-list 'org-latex-classes
+               '("assignment"
+                 "\\documentclass[12pt,twocolumn]{exam}
+                                \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
+                                \\usepackage{chemist}
+                                \\usepackage{gensymb}
+                                \\usepackage{tikz}
+                                \\usepackage{pgfplots}
+                                \\usepackage{svg}
+                                \\pgfplotsset{compat=1.11}
+                                 "
+                 ("\\begin{questions}{%s}" . "\\begin{questions}{%s}")
+                 ("\\question{%s}" . "\\question*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+               )
+  (add-to-list 'org-latex-classes
+               '("lab"
+                 "\\documentclass[12pt]{article}
+                                \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
+                                \\usepackage{chemist}
+                                \\usepackage{gensymb}
+                                \\usepackage{tikz}
+                                \\usepackage{pgfplots}
+                                \\usepackage{svg}
+                                \\pgfplotsset{compat=1.11}
+                                 "
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+END_SRC
 *** org-ref
 #+BEGIN_SRC elisp
 (after! org-ref
@@ -570,5 +619,9 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
         org-roam-server-network-arrows nil
         org-roam-server-network-label-truncate t
         org-roam-server-network-label-truncate-length 60
-        org-roam-server-network-label-wrap-length 20))
+        org-roam-server-network-label-wrap-length 20)
+  (unless (server-running-p)
+    (org-roam-server-mode))
+  )
+(require 'org-roam-protocol)
 #+END_SRC

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: underline-text
+# key: ut
+# group: latex
+# --
+\underline{\text{$1}}
