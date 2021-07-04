@@ -3,4 +3,4 @@
 # key: ctn
 # group: latex
 # --
-$$1 \text{$2}$
+$$1: \text{$2}$

@@ -50,6 +50,8 @@
     (setq mode-require-final-newline (not mode-require-final-newline)))
 (map! :leader
       :desc "Toggle auto-newline" "t n" #'toggle-final-newline)
+(map! :leader
+      :desc "Calculator" "o c" #'quick-calc)
 
 (setq fancy-splash-image "~/.doom.d/black-hole.png")
 

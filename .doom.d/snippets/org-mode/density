@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: \text
-# key: t
+# name: density
+# key: den
 # group: latex
 # --
-\text{$1}
+$$1g/cm^{3}$

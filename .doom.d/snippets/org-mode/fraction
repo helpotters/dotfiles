@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: inline-latex
-# key: $
+# name: fraction
+# key: f
 # group: latex
 # --
-$$1$
+\frac{$1}{$2}

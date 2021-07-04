@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: \cancel
-# key: c 
+# name: text
+# key: t
 # group: latex
 # --
-\cancel{$1}
+\text{$1}

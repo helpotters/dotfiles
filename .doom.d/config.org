@@ -73,6 +73,8 @@ Let's initialize our personal information so that we can mark our documents for 
     (setq mode-require-final-newline (not mode-require-final-newline)))
 (map! :leader
       :desc "Toggle auto-newline" "t n" #'toggle-final-newline)
+(map! :leader
+      :desc "Calculator" "o c" #'quick-calc)
 #+END_SRC
 * Doom Emacs Aesthetics
 ** Theming

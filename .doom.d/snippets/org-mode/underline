@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: underline
-# key: u
-# group: latex
-# --
-$\underline{$1}:$

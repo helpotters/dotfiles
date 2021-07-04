@@ -27,6 +27,8 @@
 ;(package! another-package
 ;  :recipe (:host github :repo "username/repo"))
 
+(package! eperiodic
+  :recipe (:host github :repo "helpotters/eperiodic"))
 ;; If the package you are trying to install does not contain a PACKAGENAME.el
 ;; file, or is located in a subdirectory of the repo, you'll need to specify
 ;; `:files' in the `:recipe':
