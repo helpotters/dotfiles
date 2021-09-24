@@ -141,13 +141,13 @@ bindsym $mod+Ctrl+Left workspace prev
 # something like: set $ws1 1:mail
 #                 set $ws2 2:
 set $ws1 1:dev
-set $ws2 2:math
-set $ws3 3:investing
-set $ws4 4:glot
-set $ws5 5:
+set $ws2 2:class
+set $ws3 3:math
+set $ws4 4:work
+set $ws5 5:social
 set $ws6 6:docs
-set $ws7 7:music
-set $ws8 8:ops
+set $ws7 7:config
+set $ws8 8:research
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -278,12 +278,11 @@ bindsym $mod+9 exec --no-startup-id blurlock
 # Autostart applications
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nitrogen --restore; sleep 1; picom -b
-exec --no-startup-id manjaro-hello
+#exec --no-startup-id manjaro-hello
 exec --no-startup-id nm-applet
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id pamac-tray
 exec --no-startup-id clipit
-exec --no-startup-up dropbox
 # exec --no-startup-id blueman-applet
 # exec_always --no-startup-id sbxkb
 exec --no-startup-id start_conky_maia
@@ -370,8 +369,8 @@ bindsym $mod+m bar mode toggle
 #############################
 
 # Set inner/outer gaps
-gaps inner 14
-gaps outer -2
+gaps inner 0
+gaps outer 0
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
 # gaps inner|outer current|all set|plus|minus <px>
@@ -422,8 +421,16 @@ mode "$mode_gaps_outer" {
         bindsym Escape mode "default"
 }
 
-# Swap caps-lock and escape key on environment startup.
-exec_always --no-startup-id setxkbmap -option caps:swapescape
 # Emacs daemon
 exec_always --no-startup-id emacs --daemon
+exec_always --no-startup-id ibus-daemon
 bindsym $mod+F9 exec emacsclient -c
+
+exec_always --no-startup-id dropbox
+exec_always --no-startup-id ssh-agent
+# Huion Tablet Configuration
+exec_always --no-startup-id xsetwacom --set "HID 256c:006e stylus" Rotate half
+exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 10 "key shift ctrl p"
+exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 11 "key shift ctrl e"
+exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 12 "key ctrl 6"
+exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 1 "key ctrl d"
