@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: underset
+# key: us
+# group: latex
+# --
+\underset{$1}{$2}

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: boxed
+# key: b
+# group: latex
+# --
+\boxed{$1}

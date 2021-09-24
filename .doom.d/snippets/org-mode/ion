@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ion
+# key: i
+# group: latex
+# --
+$1^{$2}$3

@@ -52,6 +52,8 @@
       :desc "Toggle auto-newline" "t n" #'toggle-final-newline)
 (map! :leader
       :desc "Calculator" "o c" #'quick-calc)
+(map! :leader
+      :desc "Find element" "s e" #'eperiodic-find-element)
 
 (setq fancy-splash-image "~/.doom.d/black-hole.png")
 
@@ -540,3 +542,12 @@
     (org-roam-server-mode))
   )
 (require 'org-roam-protocol)
+
+(after! projectile
+ (projectile-register-project-type 'ruby-rspec '(".rspec" "lib" "spec")
+                                  :project-file ".rspec"
+                                  :src-dir "lib/"
+                                  :test-dir "spec/"
+                                  :test "rspec"
+                                  :test-suffix "_spec")
+ )

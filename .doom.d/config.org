@@ -75,6 +75,8 @@ Let's initialize our personal information so that we can mark our documents for 
       :desc "Toggle auto-newline" "t n" #'toggle-final-newline)
 (map! :leader
       :desc "Calculator" "o c" #'quick-calc)
+(map! :leader
+      :desc "Find element" "s e" #'eperiodic-find-element)
 #+END_SRC
 * Doom Emacs Aesthetics
 ** Theming
@@ -627,3 +629,17 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
   )
 (require 'org-roam-protocol)
 #+END_SRC
+** Projectile
+*** Configuration
+**** Ruby
+We'll define our project defaults for ruby projects. This should save a decent amount of time by avoiding manually typing routine commands but with added bonus of limiting the scope to within the project.
+#+begin_src elisp
+(after! projectile
+ (projectile-register-project-type 'ruby-rspec '(".rspec" "lib" "spec")
+                                  :project-file ".rspec"
+                                  :src-dir "lib/"
+                                  :test-dir "spec/"
+                                  :test "rspec"
+                                  :test-suffix "_spec")
+ )
+#+end_src
