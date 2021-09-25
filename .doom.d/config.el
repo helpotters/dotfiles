@@ -31,7 +31,7 @@
                           (eq buffer-file-coding-system 'utf-8)))))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
-(global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
+    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
     (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
     (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
     (global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
@@ -483,6 +483,15 @@
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+  (unless (boundp 'org-latex-classes)
+      (setq org-latex-classes nil))
+
+(use-package! ox-moderncv
+  :after org)
+(use-package! ox-awesomecv
+  :after org)
+(use-package! ox-altacv
+  :after org)
 
 (after! org-ref
   :config

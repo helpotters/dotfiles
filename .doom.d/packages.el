@@ -18,6 +18,9 @@
 (package! org-ref)
 (package! ivy-bibtex)
 (package! org-roam-server)
+
+(package! org-cv
+  :recipe (:local-repo "~/meta/repos/org-cv/"))
 ;; (package! bibtex-actions
 ;;   :recipe (:host github :repo "bdarcus/bibtex-actions"))
 
