@@ -20,3 +20,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Personal Aliases
 alias dotgit='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias screencap='~/arts/images/screenshots/%b%d::%H%M%S.png'
+export PATH=$HOME/.emacs.d/bin:$PATH
+alias dotgit='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+export GEM_HOME="/home/helpotters/.local/share/gem/ruby/2.7.0"
+export PATH="/home/helpotters/.emacs.d/bin::/usr/bin:/bin:/usr/local/sbin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin:/home/helpotters/.local/share/gem/ruby/2.7.0/bin"
+alias n="netlify"
+alias setruby="rspec --init && bundle gem"
+alias dot='dotgit add ~/.doom.d/ && dotgit commit -m'
