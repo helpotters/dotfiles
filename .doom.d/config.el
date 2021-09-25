@@ -54,6 +54,9 @@
       :desc "Calculator" "o c" #'quick-calc)
 (map! :leader
       :desc "Find element" "s e" #'eperiodic-find-element)
+;; org
+;; (map! :prefic
+;;       :desc "Export" "e n" #'toggle-final-newline)
 
 (setq fancy-splash-image "~/.doom.d/black-hole.png")
 
@@ -487,11 +490,17 @@
       (setq org-latex-classes nil))
 
 (use-package! ox-moderncv
-  :after org)
+  :after org
+  :load-path "~/meta/repos/org-cv/moderncv"
+  :init(require 'ox-moderncv))
 (use-package! ox-awesomecv
-  :after org)
+  :after org
+  :load-path "~/meta/repos/org-cv/awesomecv"
+  :init(require 'ox-awesomecv))
 (use-package! ox-altacv
-  :after org)
+  :after org
+  :load-path "~/meta/repos/org-cv/altacv"
+  :init(require 'ox-altacv))
 
 (after! org-ref
   :config

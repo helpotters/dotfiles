@@ -77,6 +77,9 @@ Let's initialize our personal information so that we can mark our documents for 
       :desc "Calculator" "o c" #'quick-calc)
 (map! :leader
       :desc "Find element" "s e" #'eperiodic-find-element)
+;; org
+;; (map! :prefic
+;;       :desc "Export" "e n" #'toggle-final-newline)
 #+END_SRC
 * Doom Emacs Aesthetics
 ** Theming
@@ -561,12 +564,17 @@ Creating tasks is only as useful as the context we want to see them in.
 *** org-cv
 #+begin_src elisp
 (use-package! ox-moderncv
-  :after org)
+  :after org
+  :load-path "~/meta/repos/org-cv/moderncv"
+  :init(require 'ox-moderncv))
 (use-package! ox-awesomecv
-  :after org)
+  :after org
+  :load-path "~/meta/repos/org-cv/awesomecv"
+  :init(require 'ox-awesomecv))
 (use-package! ox-altacv
-  :after org)
-
+  :after org
+  :load-path "~/meta/repos/org-cv/altacv"
+  :init(require 'ox-altacv))
 #+end_src
 
 #+RESULTS:
