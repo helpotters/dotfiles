@@ -62,14 +62,14 @@ bindsym $mod+F3 exec pcmanfm
 bindsym $mod+Shift+F3 exec pcmanfm_pkexec
 bindsym $mod+F5 exec terminal -e 'mocp'
 bindsym $mod+t exec --no-startup-id pkill picom
-bindsym $mod+Ctrl+t exec --no-startup-id picom -b
+bindsym $mod+Ctrl+t exec --no-startup-id picom -b --experimental-backends
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
 bindsym Print exec --no-startup-id i3-scrot
 bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
-# focus_follows_mouse no
+focus_follows_mouse no
 
 # change focus
 bindsym $mod+h focus left
@@ -369,7 +369,7 @@ bindsym $mod+m bar mode toggle
 #############################
 
 # Set inner/outer gaps
-gaps inner 0
+gaps inner 35
 gaps outer 40
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
@@ -428,6 +428,7 @@ bindsym $mod+F9 exec emacsclient -c
 
 exec_always --no-startup-id dropbox
 exec_always --no-startup-id ssh-agent
+# exec_always --no-startup-id picom -b --experimental-backends
 # Huion Tablet Configuration
 exec_always --no-startup-id xsetwacom --set "HID 256c:006e stylus" Rotate half
 exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 10 "key shift ctrl p"
