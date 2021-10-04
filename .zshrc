@@ -28,3 +28,5 @@ export PATH="/home/helpotters/.emacs.d/bin::/usr/bin:/bin:/usr/local/sbin:/usr/l
 alias n="netlify"
 alias setruby="rspec --init && bundle gem"
 alias dot='dotgit add ~/.doom.d/ && dotgit commit -m'
+export TEXMFHOME=/home/helpotters/meta/templates
+alias ds='doom sync'
