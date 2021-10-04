@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(httpd-port 8079)
  '(org-agenda-files
-   '("~/Dropbox/org/projects/personal/personal.org" "~/Dropbox/org/projects/personal/education.org"))
+   '("~/Dropbox/org/projects/personal/work.org" "/home/helpotters/Dropbox/org/projects/personal/personal.org" "/home/helpotters/Dropbox/org/projects/personal/education.org"))
  '(org-agenda-time-grid
    '((daily today require-timed)
      (800 1000 1200 1400 1600 1800 2000)

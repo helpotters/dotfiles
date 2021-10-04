@@ -31,13 +31,14 @@
                           (eq buffer-file-coding-system 'utf-8)))))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
-    (global-set-key (kbd "<f12>") 'org-agenda) ;; WHAT DO I DO ??
-    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
     (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
     (global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
     (global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
-    (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
-    (global-set-key (kbd "<menu>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
+    (global-set-key (kbd "<XF86Launch8>") (lambda () (interactive) (org-agenda nil "c"))) ;; open main life management file
+    (global-set-key (kbd "<XF86Launch9>") 'org-agenda) ;; WHAT DO I DO ??
+    (global-set-key (kbd "<F86Launch10>") (lambda () (interactive) (find-file (concat org-base "projects/personal/personal.org")))) ;; open main life management file
+    (global-set-key (kbd "<f21>") (lambda () (interactive) (find-file (concat org-base "projects/personal/education.org")))) ;; open main life management file
 
 ;; yasnippet
         ;; creation
@@ -489,18 +490,15 @@
   (unless (boundp 'org-latex-classes)
       (setq org-latex-classes nil))
 
+(use-package! org-cv-utils
+  :load-path "~/meta/repos/org-cv/"
+  :init (require 'org-cv-utils))
 (use-package! ox-moderncv
-  :after org
-  :load-path "~/meta/repos/org-cv/moderncv"
-  :init(require 'ox-moderncv))
+  :load-path "~/meta/repos/org-cv/"
+  :init (require 'ox-moderncv))
 (use-package! ox-awesomecv
-  :after org
-  :load-path "~/meta/repos/org-cv/awesomecv"
-  :init(require 'ox-awesomecv))
-(use-package! ox-altacv
-  :after org
-  :load-path "~/meta/repos/org-cv/altacv"
-  :init(require 'ox-altacv))
+  :load-path "~/meta/repos/org-cv/"
+  :init (require 'ox-awesomecv))
 
 (after! org-ref
   :config
