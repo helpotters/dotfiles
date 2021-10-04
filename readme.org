@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       bb3dd00b-51c9-449d-a162-6fdf47d08bd7
+:END:
 #+TITLE: Readme
 * What is this and why? :ATTACH:
 :PROPERTIES:
@@ -8,4 +11,5 @@ This is a /dotfiles/ repo, which is the storage and management of configuration 
 - i3 :: A window manager that allows for comfortable keyboard control for managing window layouts and workspaces.
 
 
-[[attachment:_20211003_171336home.png]]
+
+[[attachment:_20211003_171648home.png]]
