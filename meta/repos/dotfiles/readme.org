@@ -1,0 +1,10 @@
+#+TITLE: Readme
+* What is this and why? :ATTACH:
+:PROPERTIES:
+:ID:       5396ef09-a57c-464a-bebc-317c5c43c84a
+:END:
+This is a /dotfiles/ repo, which is the storage and management of configuration files for a linux desktop, in this case, /Arch/. This allows me to quickly rollback, clone, and restore settings that I have made across multiple applications. I try to update this repo with every change I make, whether it is adding a new keybinding or updating my emacs org-mode packages.
+- Emacs :: I used doom emacs with lots of personal adjustments to org-mode. Some updates cause major failures and deletion is necessary. dotfiles save a lot of recovery time here.
+- i3 :: A window manager that allows for comfortable keyboard control for managing window layouts and workspaces.
+
+[[attachment:_20211003_1708152021-10-03-164235_3440x1440_scrot.png]]
