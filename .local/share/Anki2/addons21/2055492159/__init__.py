@@ -14,6 +14,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import base64
+import glob
 import hashlib
 import inspect
 import json
@@ -25,6 +26,7 @@ import string
 import time
 import unicodedata
 
+from PyQt5 import QtCore
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QMessageBox
 
@@ -33,6 +35,7 @@ import anki.exporting
 import anki.storage
 import aqt
 from anki.cards import Card
+from anki.consts import MODEL_CLOZE
 
 from anki.exporting import AnkiPackageExporter
 from anki.importing import AnkiPackageImporter
@@ -95,7 +98,7 @@ class AnkiConnect:
         reply = {'result': None, 'error': None}
 
         try:
-            if key != util.setting('apiKey'):
+            if key != util.setting('apiKey') and name != 'requestPermission':
                 raise Exception('valid api key must be provided')
 
             method = None
@@ -210,8 +213,10 @@ class AnkiConnect:
             ankiNote.tags = note['tags']
 
         for name, value in note['fields'].items():
-            if name in ankiNote:
-                ankiNote[name] = value
+            for ankiName in ankiNote.keys():
+                if name.lower() == ankiName.lower():
+                    ankiNote[ankiName] = value
+                    break
 
         allowDuplicate = False
         duplicateScope = None
@@ -306,6 +311,55 @@ class AnkiConnect:
     @util.api()
     def version(self):
         return util.setting('apiVersion')
+
+    @util.api()
+    def requestPermission(self, origin, allowed):
+        if allowed:
+            return {
+                "permission": "granted",
+                "requireApikey": bool(util.setting('apiKey')),
+                "version": util.setting('apiVersion')
+            }
+
+        if origin in util.setting('ignoreOriginList') :
+            return {
+                "permission": "denied",
+            }
+        
+        msg = QMessageBox(None)
+        msg.setWindowTitle("A website want to access to Anki")
+        msg.setText(origin + " request permission to use Anki through AnkiConnect.\nDo you want to give it access ?")
+        msg.setInformativeText("By giving permission, the website will be able to do actions on anki, including destructives actions like deck deletion.")
+        msg.setWindowIcon(self.window().windowIcon())
+        msg.setIcon(QMessageBox.Question)
+        msg.setStandardButtons(QMessageBox.Yes|QMessageBox.Ignore|QMessageBox.No)
+        msg.setDefaultButton(QMessageBox.No)
+        msg.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        pressedButton = msg.exec_()
+
+        if pressedButton == QMessageBox.Yes:
+            config = aqt.mw.addonManager.getConfig(__name__)
+            config["webCorsOriginList"] = util.setting('webCorsOriginList')
+            config["webCorsOriginList"].append(origin)
+            aqt.mw.addonManager.writeConfig(__name__, config)
+
+        if pressedButton == QMessageBox.Ignore:
+            config = aqt.mw.addonManager.getConfig(__name__)
+            config["ignoreOriginList"] = util.setting('ignoreOriginList')
+            config["ignoreOriginList"].append(origin)
+            aqt.mw.addonManager.writeConfig(__name__, config)
+
+        if pressedButton == QMessageBox.Yes:
+            results = {
+                "permission": "granted",
+                "requireApikey": bool(util.setting('apiKey')),
+                "version": util.setting('apiVersion')
+            }
+        else :
+            results = {
+                "permission": "denied",
+            }
+        return results
 
 
     @util.api()
@@ -545,6 +599,12 @@ class AnkiConnect:
                 return base64.b64encode(file.read()).decode('ascii')
 
         return False
+
+
+    @util.api()
+    def getMediaFilesNames(self, pattern='*'):
+        path = os.path.join(self.media().dir(), pattern)
+        return [os.path.basename(p) for p in glob.glob(path)]
 
 
     @util.api()
@@ -812,7 +872,7 @@ class AnkiConnect:
 
 
     @util.api()
-    def createModel(self, modelName, inOrderFields, cardTemplates, css = None):
+    def createModel(self, modelName, inOrderFields, cardTemplates, css = None, isCloze = False):
         # https://github.com/dae/anki/blob/b06b70f7214fb1f2ce33ba06d2b095384b81f874/anki/stdmodels.py
         if len(inOrderFields) == 0:
             raise Exception('Must provide at least one field for inOrderFields')
@@ -826,6 +886,8 @@ class AnkiConnect:
 
         # Generate new Note
         m = mm.new(modelName)
+        if isCloze:
+            m['type'] = MODEL_CLOZE
 
         # Create fields and add them to Note
         for field in inOrderFields:
