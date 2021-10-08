@@ -71,7 +71,7 @@
 (setq org-base (expand-file-name "~/Dropbox/org/"))
 (setq org-papers (expand-file-name (concat org-base "papers/")))
 (setq org-directory org-base)
-
+(setq zelda (expand-file-name "~/arts/audio/zelda/"))
 (setq org-hide-emphasis-markers t)
 
 (after! org
@@ -539,6 +539,13 @@
    org-journal-file-format "%Y-%m-%d.org")
   )
 
+(after! org
+  (setq
+   org-pomodoro-finished-sound (concat zelda "secret.wav")
+   org-pomodoro-long-break-sound (concat zelda "item.wav")
+   org-pomodoro-short-break-sound (concat zelda "smallitem.wav"))
+  )
+
 (use-package! org-roam-server
   :defer t
   :after org-roam
@@ -567,3 +574,5 @@
                                   :test "rspec"
                                   :test-suffix "_spec")
  )
+
+(setq rbenv-installation-dir "/usr")

@@ -111,7 +111,7 @@ Rather than just counting the numbers from 1-XXX, we can set it relative to the 
 (setq org-base (expand-file-name "~/Dropbox/org/"))
 (setq org-papers (expand-file-name (concat org-base "papers/")))
 (setq org-directory org-base)
-
+(setq zelda (expand-file-name "~/arts/audio/zelda/"))
 (setq org-hide-emphasis-markers t)
 #+END_SRC
 **** Keywords
@@ -625,7 +625,15 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
    org-journal-file-format "%Y-%m-%d.org")
   )
 #+END_SRC
-
+*** org-pomodoro
+#+begin_src elisp
+(after! org
+  (setq
+   org-pomodoro-finished-sound (concat zelda "secret.wav")
+   org-pomodoro-long-break-sound (concat zelda "item.wav")
+   org-pomodoro-short-break-sound (concat zelda "smallitem.wav"))
+  )
+#+end_src
 *** org-roam
 **** org-roam-bibtex
 **** org-roam-server
@@ -663,4 +671,9 @@ We'll define our project defaults for ruby projects. This should save a decent a
                                   :test "rspec"
                                   :test-suffix "_spec")
  )
+#+end_src
+** Ruby
+*** rbenv
+#+begin_src elisp
+(setq rbenv-installation-dir "/usr")
 #+end_src
