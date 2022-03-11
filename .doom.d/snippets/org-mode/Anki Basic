@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Anki Basic
+# --
+:PROPERTIES:
+:ANKI_DECK: main_deck
+:ANKI_NOTE_TYPE: Basic
+:END:

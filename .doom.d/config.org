@@ -110,6 +110,7 @@ Rather than just counting the numbers from 1-XXX, we can set it relative to the 
 #+BEGIN_SRC elisp
 (setq org-base (expand-file-name "~/Dropbox/org/"))
 (setq org-papers (expand-file-name (concat org-base "papers/")))
+;; (setq org-cite-global-bibliography (expand-file-name (concat org-papers "master.bib")))
 (setq org-directory org-base)
 (setq zelda (expand-file-name "~/arts/audio/zelda/"))
 (setq org-hide-emphasis-markers t)
@@ -523,68 +524,68 @@ Creating tasks is only as useful as the context we want to see them in.
    )
   )
 #+END_SRC
-*** org-latex
-#+BEGIN_SRC elisp
-(after! ox-latex
-  (add-to-list 'org-latex-classes
-               '("assignment"
-                 "\\documentclass[12pt,twocolumn]{exam}
-                                \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
-                                \\usepackage{chemist}
-                                \\usepackage{gensymb}
-                                \\usepackage{tikz}
-                                \\usepackage{pgfplots}
-                                \\usepackage{svg}
-                                \\pgfplotsset{compat=1.11}
-                                 "
-                 ("\\begin{questions}{%s}" . "\\begin{questions}{%s}")
-                 ("\\question{%s}" . "\\question*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-               )
-  (add-to-list 'org-latex-classes
-               '("lab"
-                 "\\documentclass[12pt]{article}
-                                \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
-                                \\usepackage{chemist}
-                                \\usepackage{gensymb}
-                                \\usepackage{tikz}
-                                \\usepackage{pgfplots}
-                                \\usepackage{svg}
-                                \\pgfplotsset{compat=1.11}
-                                 "
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-  (unless (boundp 'org-latex-classes)
-      (setq org-latex-classes nil))
-#+END_SRC
-*** org-cv
-#+begin_src elisp
-(use-package! org-cv-utils
-  :load-path "~/meta/repos/org-cv/"
-  :init (require 'org-cv-utils))
-(use-package! ox-moderncv
-  :load-path "~/meta/repos/org-cv/"
-  :init (require 'ox-moderncv))
-(use-package! ox-awesomecv
-  :load-path "~/meta/repos/org-cv/"
-  :init (require 'ox-awesomecv))
-#+end_src
+# *** org-latex
+# #+BEGIN_SRC elisp
+# (after! ox-latex
+#   (add-to-list 'org-latex-classes
+#                '("assignment"
+#                  "\\documentclass[12pt,twocolumn]{exam}
+#                                 \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
+#                                 \\usepackage{chemist}
+#                                 \\usepackage{gensymb}
+#                                 \\usepackage{tikz}
+#                                 \\usepackage{pgfplots}
+#                                 \\usepackage{svg}
+#                                 \\pgfplotsset{compat=1.11}
+#                                  "
+#                  ("\\begin{questions}{%s}" . "\\begin{questions}{%s}")
+#                  ("\\question{%s}" . "\\question*{%s}")
+#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+#                )
+#   (add-to-list 'org-latex-classes
+#                '("lab"
+#                  "\\documentclass[12pt]{article}
+#                                 \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
+#                                 \\usepackage{chemist}
+#                                 \\usepackage{gensymb}
+#                                 \\usepackage{tikz}
+#                                 \\usepackage{pgfplots}
+#                                 \\usepackage{svg}
+#                                 \\pgfplotsset{compat=1.11}
+#                                  "
+#                  ("\\section{%s}" . "\\section*{%s}")
+#                  ("\\subsection{%s}" . "\\subsection*{%s}")
+#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#   (unless (boundp 'org-latex-classes)
+#       (setq org-latex-classes nil))
+# #+END_SRC
+# # *** org-cv
+# # #+begin_src elisp
+# # (use-package! org-cv-utils
+# #   :load-path "~/meta/repos/org-cv/"
+# #   :init (require 'org-cv-utils))
+# # (use-package! ox-moderncv
+# #   :load-path "~/meta/repos/org-cv/"
+# #   :init (require 'ox-moderncv))
+# # (use-package! ox-awesomecv
+# #   :load-path "~/meta/repos/org-cv/"
+# #   :init (require 'ox-awesomecv))
+# # #+end_src
 
-#+RESULTS:
+# # #+RESULTS:
 
 *** org-ref
 #+BEGIN_SRC elisp
 (after! org-ref
   :config
-  (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
+  ;; (setq org-ref-default-bibliography (list (concat org-papers "master.bib")))
   (setq org-ref-pdf-directory (concat org-papers "zotero/storage/"))
   (setq org-ref-notes-directory org-papers)
-  (setq org-ref-bibliography-notes (concat org-papers "master.org"))
+  ;; (setq org-ref-bibliography-notes (concat org-papers "master.org"))
   (setq org-ref-completion-library 'org-ref-ivy-cite-completion)
   (setq org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
   )
@@ -658,6 +659,24 @@ We are utilizing Zotero for managing our library. org-ref is fantastic, however 
   )
 (require 'org-roam-protocol)
 #+END_SRC
+**** org-roam-ui
+#+begin_src elisp
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
+#+end_src
 ** Projectile
 *** Configuration
 **** Ruby

@@ -18,9 +18,11 @@
 (package! org-ref)
 (package! ivy-bibtex)
 (package! org-roam-server)
+(package! org-roam-ui)
 
-(package! org-cv
-  :recipe (:host gitlab :repo "zzamboni/org-cv"))
+;; (package! org-cv
+;;   :recipe (:host gitlab :repo "zzamboni/org-cv"))
+(package! anki-editor)
 ;; (package! bibtex-actions
 ;;   :recipe (:host github :repo "bdarcus/bibtex-actions"))
 
