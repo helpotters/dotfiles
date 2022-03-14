@@ -524,60 +524,6 @@ Creating tasks is only as useful as the context we want to see them in.
    )
   )
 #+END_SRC
-# *** org-latex
-# #+BEGIN_SRC elisp
-# (after! ox-latex
-#   (add-to-list 'org-latex-classes
-#                '("assignment"
-#                  "\\documentclass[12pt,twocolumn]{exam}
-#                                 \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
-#                                 \\usepackage{chemist}
-#                                 \\usepackage{gensymb}
-#                                 \\usepackage{tikz}
-#                                 \\usepackage{pgfplots}
-#                                 \\usepackage{svg}
-#                                 \\pgfplotsset{compat=1.11}
-#                                  "
-#                  ("\\begin{questions}{%s}" . "\\begin{questions}{%s}")
-#                  ("\\question{%s}" . "\\question*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-#                )
-#   (add-to-list 'org-latex-classes
-#                '("lab"
-#                  "\\documentclass[12pt]{article}
-#                                 \\usepackage[letterpaper,margin=1in,bottom0.6in]{geometry}
-#                                 \\usepackage{chemist}
-#                                 \\usepackage{gensymb}
-#                                 \\usepackage{tikz}
-#                                 \\usepackage{pgfplots}
-#                                 \\usepackage{svg}
-#                                 \\pgfplotsset{compat=1.11}
-#                                  "
-#                  ("\\section{%s}" . "\\section*{%s}")
-#                  ("\\subsection{%s}" . "\\subsection*{%s}")
-#                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-#                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-#                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-#   (unless (boundp 'org-latex-classes)
-#       (setq org-latex-classes nil))
-# #+END_SRC
-# # *** org-cv
-# # #+begin_src elisp
-# # (use-package! org-cv-utils
-# #   :load-path "~/meta/repos/org-cv/"
-# #   :init (require 'org-cv-utils))
-# # (use-package! ox-moderncv
-# #   :load-path "~/meta/repos/org-cv/"
-# #   :init (require 'ox-moderncv))
-# # (use-package! ox-awesomecv
-# #   :load-path "~/meta/repos/org-cv/"
-# #   :init (require 'ox-awesomecv))
-# # #+end_src
-
-# # #+RESULTS:
-
 *** org-ref
 #+BEGIN_SRC elisp
 (after! org-ref

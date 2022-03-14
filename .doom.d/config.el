@@ -31,7 +31,7 @@
                           (eq buffer-file-coding-system 'utf-8)))))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
-(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
     (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
     (global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
     (global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
