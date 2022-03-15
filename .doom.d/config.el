@@ -87,11 +87,11 @@
 
 (after! org-fancy-priorities
   (setq
-   org-highest-priority ?A ;; urgent and important
-   org-default-priority ?B ;; urgent but not important
-   ;; C important but not urgent
-   org-lowest-priority ?D ;; not urgent and not important
-   org-fancy-priorities-list '("", "", "", "")
+   ;; org-highest-priority ?A ;; urgent and important
+   ;; org-default-priority ?B ;; urgent but not important
+   ;; ;; C important but not urgent
+   ;; org-lowest-priority ?D ;; not urgent and not important
+   ;; org-fancy-priorities-list '("", "", "", "")
    )
   )
 
