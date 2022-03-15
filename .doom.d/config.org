@@ -122,8 +122,6 @@ We need rewrite the keywords that our agenda utilizes for todo tasks: namely we 
 (after! org
   (setq
    org-todo-keywords '((sequence
-                        "REPEAT(r)"
-                        "NEXT(n)" ;; next task
                         "TODO(t)" ;; A task
                         "PROG(g@)" ;; IN progress
                         "WAITING(w@)"
@@ -169,7 +167,6 @@ We'll also change up the org-habit chain glyphs to something more aesthetically 
 #+END_SRC
 
 *** org-agenda
-
 Now we'll also configure some basic point abouts our agenda-view, namely the default days for starting, deadlines, and only showing tasks and removing done tasks.
 
 #+BEGIN_SRC elisp
@@ -492,26 +489,6 @@ Creating tasks is only as useful as the context we want to see them in.
 (after! org (setq org-agenda-category-icon-alist '(
                                                    ;; Education Cats
                                                    ("uni" "~/Dropbox/Apps/png/school.png" nil nil :ascent center)
-                                                   ("reading" "~/Dropbox/Apps/png/chemistry-1.png" nil nil :ascent center)
-                                                   ("homework" "~/Dropbox/Apps/png/chemistry.png" nil nil :ascent center)
-                                                   ;; Interpersonal
-                                                   ("meeting" "~/Dropbox/Apps/png/contacts.png" nil nil :ascent center)
-                                                   ("zoom" "~/Dropbox/Apps/png/videoconference.png" nil nil :ascent center)
-                                                   ("dnd" "~/Dropbox/Apps/png/icosahedron.png" nil nil :ascent center)
-                                                   ;; Finances
-                                                   ("real-estate" "~/Dropbox/Apps/png/eco-house.png" nil nil :ascent center)
-                                                   ("investing" "~/Dropbox/Apps/png/accruals.png" nil nil :ascent center)
-                                                   ("work" "~/Dropbox/Apps/png/work.png" nil nil :ascent center)
-                                                   ;; Computers
-                                                   ("linux" "~/Dropbox/Apps/png/linux.png" nil nil :ascent center) ;; computer maintence
-                                                   ("emacs" "~/Dropbox/Apps/png/emacs.png" nil nil :ascent center) ;; emacs maintenence
-                                                   ("web dev" "~/Dropbox/Apps/png/web-design.png" nil nil :ascent center)
-                                                   ;; Health
-                                                   ("exercise" "~/Dropbox/Apps/png/barbell.png" nil nil :ascent center)
-                                                   ("health" "~/Dropbox/Apps/png/heart-1.png" nil nil :ascent center)
-                                                   ("brain" "~/Dropbox/Apps/png/brain.png" nil nil :ascent center)
-                                                   ;; Planning
-                                                   ("plan" "~/Dropbox/Apps/png/filter-1.png" nil nil :ascent center)
                                                    )))
 #+END_SRC
 *** org-capture
