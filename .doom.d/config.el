@@ -79,12 +79,8 @@
   (setq
    org-todo-keywords '((sequence
                         "TODO(t)" ;; A task
-                        "PROG(g@)" ;; IN progress
-                        "WAITING(w@)"
-                        "PROJ(p@)"
                         "|"
                         "DONE(d)"
-                        "CANCELED(c!)"
                         ))
    )
   )
