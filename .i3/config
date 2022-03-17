@@ -77,11 +77,11 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+# move workspace to other monitor
+bindsym $mod+Left move workspace to output left
+bindsym $mod+Down move workspace to output down
+bindsym $mod+Up move workspace to output up
+bindsym $mod+Right move workspace to output right
 
 # move focused window
 bindsym $mod+Shift+h move left
@@ -140,14 +140,14 @@ bindsym $mod+Ctrl+Left workspace prev
 # to display names or symbols instead of plain workspace numbers you can use
 # something like: set $ws1 1:mail
 #                 set $ws2 2:
-set $ws1 1:dev
-set $ws2 2:class
-set $ws3 3:math
+set $ws1 1:dev-coding
+set $ws2 2:dev-testing
+set $ws3 3:dev-ref
 set $ws4 4:work
 set $ws5 5:social
 set $ws6 6:docs
 set $ws7 7:config
-set $ws8 8:research
+set $ws8 8:org-mode
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -329,6 +329,7 @@ bar {
 	position bottom
 
 ## please set your primary output first. Example: 'xrandr --output eDP1 --primary'
+##
 #	tray_output primary
 #	tray_output eDP1
 
@@ -435,3 +436,7 @@ exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 10 "k
 exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 11 "key shift ctrl e"
 exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 12 "key ctrl 6"
 exec_always --no-startup-id xsetwacom --set "HID 256c:006e Pad pad" Button 1 "key ctrl d"
+# Keyboard Config
+exec_always --no-startup-id setxkbmap -option caps:swapescape
+# Monitor Config
+exec_always --no-startup-id xrandr --output DisplayPort-0 --auto --below HDMI-A-0
