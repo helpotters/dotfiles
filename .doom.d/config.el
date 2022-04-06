@@ -31,7 +31,7 @@
                           (eq buffer-file-coding-system 'utf-8)))))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
-    (global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
+(global-set-key (kbd "<f9>") 'ivy-bibtex) ;; open up references
     (global-set-key (kbd "<f6>") 'org-capture) ;; open up templates
     (global-set-key (kbd "<f7>") 'org-columns) ;; toggle org buffer columns
     (global-set-key (kbd "<f8>") 'org-agenda-columns) ;; toggle agenda columns
@@ -519,3 +519,18 @@
  )
 
 (setq rbenv-installation-dir "/usr")
+
+(add-to-list 'auto-mode-alist '("\\.rake\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.ru\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Guardfile\\'" . ruby-mode))
+
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+
+(after! company
+  (setq +lsp-company-backends '(company-tabnine :separate company-capf company-yasnippet))
+  (setq company-show-numbers t)
+  (setq company-idle-delay 0)
+)

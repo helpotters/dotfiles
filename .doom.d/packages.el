@@ -19,6 +19,10 @@
 (package! ivy-bibtex)
 (package! org-roam-server)
 (package! org-roam-ui)
+(package! evil-motion-trainer
+  :recipe (:host github :repo "martinbaillie/evil-motion-trainer"))
+
+(package! company-tabnine :recipe (:host github :repo "TommyX12/company-tabnine"))
 
 ;; (package! org-cv
 ;;   :recipe (:host gitlab :repo "zzamboni/org-cv"))
