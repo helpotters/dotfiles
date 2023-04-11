@@ -1,73 +1,26 @@
-;; -*- no-byte-compile: t; -*-
-;;; $DOOMDIR/packages.el
+;; Please dont modify this file.  Edit ~/.doom.d/user-packages.el instead.
 
-;; To install a package with Doom you must declare them here and run 'doom sync'
-;; on the command line, then restart Emacs for the changes to take effect -- or
-;; use 'M-x doom/reload'.
+(package! string-inflection :pin "fd7926ac17293e9124b31f706a4e8f38f6a9b855")
+(package! kubernetes :pin "d52ad7dacf17b659060e52d5e3318cafd7946616")
+(package! kubernetes-evil :pin "d52ad7dacf17b659060e52d5e3318cafd7946616")
+(package! multi-line :pin "625c608443f98bb34b4d5600d52c198509fb64d0")
+(package! ruby-refactor :pin "e6b7125878a08518bffec6942df0c606f748e9ee")
+(package! command-log-mode :pin "af600e6b4129c8115f464af576505ea8e789db27")
+(package! google-translate :pin "0f7f48a09bca064999ecea03102a7c96f52cbd1b")
+(package! ruby-hash-syntax :pin "d458fb5891e0da85271b1cba3ee0ee69ea66a374")
+(package! f :pin "50af874cd19042f17c8686813d52569b1025c76a")
+(package! lsp-tailwindcss :pin "dc4d5246afe8620cdffaff1a362529f5d63b1ef5")
+(package! crdt :pin "1b8af8112944cb79c66a35b4404f61ac2abfef1d")
+(package! rails-routes :pin "eab995a9297ca5bd9bd4f4c2737f2fecfc36def0")
+(package! rails-i18n :pin "8e87e4e48e31902b8259ded28a208c2e7efea6e9")
+(package! harpoon :pin "a23571eaab94fb2da0569ed5ab3c1b469f123b97")
+(package! ruby-json-to-hash :pin "383b22bb2e007289ac0dba146787d02ff99d4415")
+(package! evil-tutor :pin "4e124cd3911dc0d1b6817ad2c9e59b4753638f28")
+(package! robe :disable t)
+(package! emmet-mode)
 
-
-;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
-;(package! some-package)
-(package! org-super-agenda)
-
-(package! org-pretty-table-mode
-  :recipe (:host github :repo "Fuco1/org-pretty-table"))
-(package! org-fragtog)
-(package! org-pretty-tags)
-(package! golden-ratio)
-(package! org-ref)
-(package! ivy-bibtex)
-(package! org-roam-server)
-(package! org-roam-ui)
-(package! evil-motion-trainer
-  :recipe (:host github :repo "martinbaillie/evil-motion-trainer"))
-
-(package! company-tabnine :recipe (:host github :repo "TommyX12/company-tabnine"))
-
-;; (package! org-cv
-;;   :recipe (:host gitlab :repo "zzamboni/org-cv"))
-(package! anki-editor)
-;; (package! bibtex-actions
-;;   :recipe (:host github :repo "bdarcus/bibtex-actions"))
-
-;; To install a package directly from a remote git repo, you must specify a
-;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
-;; https://github.com/raxod502/straight.el#the-recipe-format
-;(package! another-package
-;  :recipe (:host github :repo "username/repo"))
-
-(package! eperiodic
-  :recipe (:host github :repo "helpotters/eperiodic"))
-;; If the package you are trying to install does not contain a PACKAGENAME.el
-;; file, or is located in a subdirectory of the repo, you'll need to specify
-;; `:files' in the `:recipe':
-;(package! this-package
-;  :recipe (:host github :repo "username/repo"
-;           :files ("some-file.el" "src/lisp/*.el")))
-
-;; If you'd like to disable a package included with Doom, you can do so here
-;; with the `:disable' property:
-;(package! builtin-package :disable t)
-
-;; You can override the recipe of a built in package without having to specify
-;; all the properties for `:recipe'. These will inherit the rest of its recipe
-;; from Doom or MELPA/ELPA/Emacsmirror:
-;(package! builtin-package :recipe (:nonrecursive t))
-;(package! builtin-package-2 :recipe (:repo "myfork/package"))
-
-;; Specify a `:branch' to install a package from a particular branch or tag.
-;; This is required for some packages whose default branch isn't 'master' (which
-;; our package manager can't deal with; see raxod502/straight.el#279)
-;; (package! builtin-package :recipe (:branch "develop"))
-
-;; Use `:pin' to specify a particular commit to install.
-;(package! builtin-package :pin "1a2b3c4d5e")
-;; (package! builtin-package :pin "f0dbb1ffd27366b363157afe3f719077bbc1bcb0")
-
-;; Doom's packages are pinned to a specific commit and updated from release to
-;; release. The `unpin!' macro allows you to unpin single packages...
-;(unpin! pinned-package)
-;; ...or multiple packages
-;(unpin! pinned-package another-pinned-package)
-;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
-;(unpin! t)
+(if (file-exists-p (expand-file-name "user-packages.el" doom-private-dir))
+    (load (expand-file-name "user-packages.el" doom-private-dir))
+  (progn
+    (shell-command "cp ~/.doom.d/user-packages.example.el ~/.doom.d/user-packages.el")
+    (load (expand-file-name "user-packages.el" doom-private-dir))))

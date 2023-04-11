@@ -1,0 +1,582 @@
+#+title: User Settings
+These user settings run in tandem with the [[https:github.com/otavioschwanck/doom-emacs-on-rails][Ruby on Rails config]] by =@otavioschwanck=.
+* Goals
+A literate configuration should include descriptions of the problems they including examples. I'll also be creating a sort of descriptive 'cheatsheet' for keybindings for modes with descriptions of the problems they solve.
+
+Should anyone else utilize this, it should aid in discoverability for new functions and concepts in Doom Emacs. As it stands, learning all the combinations of modes is a rather tedious combing through documentation. It must explain why it is useful in simple language. As with any video game, a player starts with a tutorial of how to perform simple actions, and progressively learns how to expand upon that. Essentially, a guide that is also implementation.
+* Personal Information
+#+begin_src elisp
+(setq user-full-name "Paul Lemus"
+      user-mail-address "paullemus@protonmail.com")
+(use-package! org
+  :init
+  (setq
+   org-directory "~/org"
+   org-roam-directory "~/org/roam"
+   )
+  )
+#+end_src
+* Packages
+** Org-mode
+* Workflows
+Rather than simply defining the configuration, the configurations only exist when attached to a workflow concept. Whether it's research or programming, it is a part of a flow.
+** Personal Organization
+I want my organization to reflect my goals to me in different contexts. Sometimes its review, sometimes to-do. Whatever it is, however, the system should handle anything I throw at it.
+
+Here is my basic file setup.
+#+begin_src elisp
+(after! org
+  (setq
+   org-agenda-files
+   '("~/org/projects/personal.org" "~/org/projects/projects.org")))
+#+end_src
+
+#+RESULTS:
+| ~/org/projects/personal.org | ~/org/projects/projects.org |
+
+*** Inbox
+There should be methods of communicating with the system so that usage is friction-less.
+
+One thing I want is to add ideas. The existing capture template is good for that, as is the existing to-do. Also, something separate from ideas and to-dos are 'points of resistance', descriptions of behaviors that cause displeasure. By adding it to the inbox, the items will get solved eventually.
+*** Processing
+Process inbox items until they're all dealt with. Here, we'll add context to each item so it's actually actionable and useful (or removed if it's not).
+
+The main action performed here is refiling to the correct org-files with the appropriate metadata attached for later contextualization.
+**** Daily Review
+**** Weekly Sunday Review
+*** Contextualization
+Contexts also live within files.
+I have a couple:
+- Habits :: Things I want to do every day
+- Projects :: Active Projects
+- Someday ::  Inactive projects
+**** Basic Settings
+#+BEGIN_SRC elisp
+(after! org
+  (setq
+   org-agenda-start-day "0d" ;; View my agenda TODAY as the first item
+   org-agenda-skip-scheduled-if-done t
+   org-agenda-skip-deadline-if-done t
+   org-agenda-skip-timestamp-if-done t
+   ;; org-agenda-current-time-string " Now "
+   ;; org-agenda-breadcrumbs-separator ""
+   ;; org-agenda-block-separator '""
+   org-agenda-span 1
+   ;; org-agenda-compact-blocks t
+   )
+  )
+#+END_SRC
+
+#+RESULTS:
+: 1
+
+**** Views
+Visualization in usual active-contexts.
+***** Today's Tasks
+#+begin_src elisp
+(use-package! org-super-agenda
+  :after org-agenda
+  :init
+  (setq! org-agenda-custom-commands
+        '( ;; all container
+          ("c" "Concise Day View"
+           (;; view container
+            (todo "REPEAT" ((org-agenda-overriding-header "")
+                               (org-agenda-remove-tags)
+                               (org-agenda-prefix-format "  %i %?-2 t%s")
+                               (org-super-agenda-groups
+                                '((:name " Habits"
+                                   :discard (:not (:habit t))
+                                   :scheduled today
+                                   :order 1)
+                                  (:discard (:anything)))
+                                ))
+
+                     )
+            (agenda "" ((org-agenda-overriding-header "")
+                        (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                        (org-agenda-prefix-format
+                        '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "  %?-12t% i")
+                           ;; (timeline  . " %?-12e")
+                           ;; (todo  . " %?-12e ")
+                           (tags  . " %?-12i")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-time-grid '((today)(600 800 1000 1200 1400 1600 1800 2000) "   " ""))
+                        (org-super-agenda-groups
+                         '(
+                           (:name " Initiatives"
+                            :and (:tag "initiative" :scheduled today :todo "next")
+                            :order 3
+                            )
+                           (:name " Monkey "
+                            :and (:tag "null" :scheduled today :todo "NEXT")
+                            :order 4
+                            )
+                           (:name " Today's Schedule "
+                            :discard (:property "STYLE")
+                            :discard (:and (:tag "study" :scheduled nil))
+                            :time-grid t
+                            :date today
+                            :scheduled today
+                            :order 2
+                            :discard(:anything)
+                            )
+
+                           (:discard(:anything)))
+                         ))
+                    )
+
+            (alltodo "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
+                         (org-agenda-scheduled-leaders '("" "          "))
+                         (org-agenda-prefix-format " %i %?-2 t%s")
+                         ;; (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                         (org-super-agenda-groups
+                          '(
+                            (:name " Missed "
+                             :scheduled past
+                             :date today
+                             :order 1
+                             )
+                            (:discard (:anything))
+                            ))
+                         )
+                     )
+            ;; container end
+            );;view container end
+           );; concise view container end
+
+          ("p" "Night Planning View"
+           (;; view container
+            (agenda "" ((org-agenda-overriding-header "Plan ahead. ") ;;(org-agenda-remove-tags)
+                        ;; (org-agenda-scheduled-leaders '( '(defun org-agenda-get-category-icon) "          "))
+                        ;; (org-agenda-prefix-format " %i %?-2 t%s")
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "   %?-12t% s")
+                           ;; (timeline  . " %?-i % s")
+                           ;; (todo  . " %c")
+                           ;; (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-time-grid '((weekly)(600 800 1000 1200 1400 1600 1800 2000) "   " ""))
+                        (org-agenda-span 2)
+                        (org-agenda-start-day "+1d")
+                        (org-super-agenda-groups
+                         '((:name " Tomorrow and Day After"
+                            :time-grid t
+                            :order 1
+                            )
+                           (:name "To-Do"
+                            :auto-category t)
+                           )
+                         ))
+                    )
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-agenda-remove-tags)
+                         (org-agenda-prefix-format "  %i %?-2 t%s")
+                         (org-super-agenda-groups
+                          '(
+                            (:name "  Deadlines Approaching "
+                             :deadline future
+                             :order 1
+                             )
+                            (:discard(:anything))
+                            )))
+                     )
+
+
+
+            (alltodo "" ((org-agenda-overriding-header "") ;;(org-agenda-remove-tags)
+                         (org-agenda-scheduled-leaders '("" "          "))
+                         (org-agenda-prefix-format " %i %?-2 t%s")
+                         ;; (org-agenda-time-grid '((today)(800 1000 1200 1400 1600 1800 2000) "   " ""))
+                         (org-super-agenda-groups
+                          '((:auto-parent t))
+                          ))
+                     )
+            );;view container end
+           );;nightly end
+          ("e" "Tomes & Learning"
+           (
+            (alltodo "NEXT" ((org-agenda-overriding-header " Academic Summary ")
+                             (org-agenda-skip-deadline-prewarning-if-scheduled t)
+                             (org-agenda-remove-tags)
+                             (org-agenda-prefix-format "  %i %?-5 s%t")
+                             (org-super-agenda-groups
+                              '((:log t)
+                                (:name " Readings "
+                                 :and (:tag "reading" :todo "NEXT")
+                                 :order 1)
+                                (:name " Assignments"
+                                 :and (:tag "assignment" :todo "NEXT")
+                                 :discard (:not (:scheduled nil))
+                                 :order 2)
+                                (:discard (:anything))
+                                )
+                              )))
+
+
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-agenda-span 'month)
+                         ;; (org-agenda-prefix-format " %i %?-2 t%2")
+                         (org-agenda-show-all-dates nil)
+                         (org-super-agenda-groups
+                          '((:name "Exams "
+                             :and (:todo "NEXT" :tag "exam")
+                             :order 3)
+                            (:discard (:anything))))
+                         )
+                     )
+            (agenda "" ((org-agenda-overriding-header "")
+                        (org-agenda-skip-scheduled-if-deadline-is-shown t)
+                        (org-agenda-show-all-dates nil)
+                        (org-agenda-prefix-format "  %i %?-2 t%s")
+                        (org-super-agenda-groups
+                         '((:name "Deadlines "
+                            :and (:tag "study" :deadline future)
+                            :order 4)
+                           (:discard (:anything))))
+                        )
+                    )
+            ) ;; container end
+           );;tomes end
+          ("d" "Daily Glance"
+           (
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-super-agenda-groups
+                          '((:log t)
+                            (:name " UPCOMING "
+                             :todo "NEXT"
+                             :date today
+                             :order 1
+                             :discard (:anything))
+                            (:name "Project Actions "
+                             :todo "PROJ"
+                             :discard (:not (:todo "NEXT"))
+                             )
+                            (:auto-group t)
+                            )
+
+                          )))
+
+
+            (agenda "" ((org-agenda-overriding-header "")
+                        (org-super-agenda-groups
+                         '((:name " Today's Schedule "
+                            :time-grid t
+                            :date today
+                            :order 3)
+                           (:discard (:anything))))
+                        )
+                    )
+            ) ;; container end
+           ) ;; daily glance container end
+          ("w" "Weekly Overview"
+           (
+            (agenda "" ((org-agenda-overriding-header " Here's Your Week ")
+                        (org-agenda-remove-tags)
+                        (org-agenda-show-all-dates nil)
+                        (org-agenda-span 7)
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "  %?-12t% s")
+                           (timeline  . " %?-i % s")
+                           ;; (todo  . " %c")
+                           ;; (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-start-day "-1d")
+                        (org-super-agenda-groups
+                         '((:log t)
+                           (:name " "
+                            :scheduled future
+                            :todo "TODO"
+                            :order 1
+                            :discard (:todo "REPEAT")
+                            )
+                           ;; (:name " Assignments"
+                           ;;  :children t
+                            (:auto-parent t)
+                           ;;  :order 2)
+                           ;; (:discard (:anything))
+                           )
+                         )))
+
+
+            ;; (agenda "" ((org-agenda-overriding-header "Important Dates")
+            ;;             (org-super-agenda-groups
+            ;;              '((:name "Exams "
+
+            ;;                 :time-grid t
+            ;;                 :order 3)
+            ;;                (:discard (:anything))))
+            ;;             )
+            ;;         )
+            ) ;; container end
+           ) ;; week container end
+          ("q" "Quarter Overview"
+           (
+            (agenda "" ((org-agenda-overriding-header " Quarterly Overview")
+                        (org-agenda-remove-tags)
+                        (org-agenda-show-all-dates nil)
+                        (org-agenda-entry-types '(:deadline))
+                        (org-agenda-span 100) ;; 14 weeks
+                        (org-agenda-prefix-format
+                         '(
+                           ;; (tags . " %i %-12:c%?-12t% s") ;; file name + org-agenda-entry-type
+                           (agenda  . "  %?-12t% s")
+                           ;; (timeline  . " %?-i % s")
+                           ;; (todo  . " %c")
+                           (tags  . " %i %-12:c")
+                           ;; (search . " %i %-12:c")
+                           ))
+                        (org-agenda-start-day "-1d")
+                        (org-super-agenda-groups
+                         '((:log t)
+                           (:name " "
+                            :time-grid nil
+                            :deadline future
+                            :discard (:not (:deadline future))
+                            :order 1)
+                           )
+                         )))
+
+            ) ;; container end
+           );; quarter view
+          );; all views container end
+        );; setq container end
+
+
+  :config
+  (org-super-agenda-mode)
+  ) ;; use package end
+  #+end_src
+
+  #+RESULTS:
+
+***** Active Project Tasks
+***** Small Easy Tasks
+**** Reviews
+Edit and process existing entries for future views. This is key to a good system, as reviewing will enable smart editing and planning due to having data of past work. Using clock-reports and effort-estimates, failures or successes will yield a forecast of future plans, grounded in reality.
+***** Weekly Review
+***** Nightly Review
+***** View Clock Reports for the Day
+** Notetaking
+The goal of notetaking is for useable recollection and application.
+- Externalize thought
+- Apply information later in a different context
+*** Prelim
+Setting up the file structure
+#+begin_src elisp
+    (setq org-base (expand-file-name "~/org/"))
+    (setq org-papers (expand-file-name (concat org-base "papers/")))
+    ;; (setq org-cite-global-bibliography (expand-file-name (concat org-papers "master.bib")))
+    (setq org-directory org-base)
+    (setq zelda (expand-file-name "~/arts/audio/zelda/"))
+    (setq org-hide-emphasis-markers t)
+#+end_src
+
+#+RESULTS:
+: t
+
+*** Helm Bibtex
+****  Ivy-bibtex
+We are utilizing Zotero for managing our library. org-ref is fantastic, however it is not great at managing tags, links, and especially sci-hub integration.
+#+BEGIN_SRC elisp
+  (setq!
+   bibtex-completion-bibliography (concat org-base "papers/master.bib")
+   bibtex-completion-pdf-field "file"
+   bibtex-completion-library-path (concat org-papers "zotero/storage/")
+   bibtex-completion-notes-path (concat org-base "papers/")
+   )
+#+END_SRC
+
+#+RESULTS:
+: /home/helpotters/org/papers/
+*** Nov.el
+
+#+begin_src elisp
+(after! nov
+  :config
+    (setq nov-text-width t)
+    (setq visual-fill-column-center-text t)
+    (add-hook 'nov-mode-hook 'visual-line-mode)
+    (add-hook 'nov-mode-hook 'visual-fill-column-mode)
+)
+
+#+end_src
+
+#+RESULTS:
+| visual-fill-column-mode | visual-line-mode | nov-imenu-setup | hack-dir-local-variables-non-file-buffer | nov-add-to-recentf |
+
+** Dungeons & Dragons
+I'll be utilizing =org-roam= for notetaking. Rather than creating structured documents, a rapid tagging system with links and backlinks would be more suitable for the diversity of a TTRPG.
+- Move to a separate network just for TTRPGs
+*** Org-Roam-Capture
+
+Org-roam lets you quickly create new nodes (or add to existing ones).
+
+These templates will allow me to rapidly add context-specific items for tracking new characters, locations, details, etc. Rather than creating a session- or campaign-specific org file, the network will let me focus on small things rather than worry about the broad structure. /"Is this detail for character's or plot?/
+#+begin_src elisp
+;; (after! org-roam
+;;   (setq!
+;;    org-roam-capture-templates
+;;    '(
+;;      ("d" "default" plain "%?" :target
+;;       (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;       :unnarrowed t)
+;;      ("x" "Dungeons & Dragons")
+;;      ("dn" "NPC" plain
+;;       "* Race\n* Description\n* Circumstances of Encounter"
+;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;       :unnarrowed t
+;;       )
+;;      ("dg" "Groups" plain
+;;       "* What do they do?\n* Rivals?\n* Where you can find members?\n* Iconography\n* Diposition towards party"
+;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;       :unnarrowed t
+;;       )
+;;      ("ds" "Places or Shops" plain
+;;       "* Location Details\n* What do they do?\n"
+;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;       :unnarrowed t
+;;       )
+;;      ("dc" "Cities, Towns, or Geography" plain
+;;       "* Why is mentioned?"
+;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;       :unnarrowed t
+;;       )
+;;      ("dq" "Quests or Tasks" plain
+;;       "* Who gave it to us?\n* What do we have to do?\n* Where is it?\n* Reward"
+;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;       :unnarrowed t
+;;       )
+;;      ("dl" "Loot" plain
+;;       "* Description\n* Price or value?\n"
+;;       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+;;       :unnarrowed t
+;;       )
+;;      ))
+;;   )
+#+end_src
+
+#+RESULTS:
+| d | default | plain | %? | :target | (file+head %<%Y%m%d%H%M%S>-${slug}.org #+title: ${title} |
+** Programming
+* Aesthetics
+** Comfort
+This is to add some breathing room to Emacs, especially in org-mode.
+
+- add some padding to the edges
+ #+begin_src elisp
+(setq! visual-fill-column-center-text t)
+(add-hook! 'org-mode-hook (visual-fill-column-mode +1))
+(add-hook! 'org-mode-hook (display-line-numbers-mode 0))
+(add-hook! 'org-agenda-mode-hook (visual-fill-column-mode +1))
+(add-hook! 'org-agenda-mode-hook (hl-line-mode 0))
+ #+end_src
+
+ #+RESULTS:
+
+  - No number lines in org-mode
+  - center text
+  - Remove company backend for autocomplete.
+
+** Which-key
+#+begin_src elisp
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
+   ))
+#+end_src
+
+** Fonts
+#+begin_src elisp
+(setq!  doom-font (font-spec :family "JetBrains Mono" :size 22)
+       doom-big-font (font-spec :family "JetBrains Mono" :size 36))
+#+end_src
+
+#+RESULTS:
+
+** Theme
+#+begin_src elisp
+(setq doom-theme 'doom-dracula)
+#+end_src
+
+#+RESULTS:
+: doom-dracula
+
+** Org-Mode
+Default org-mode settings are /okay/, but need to be neater.
+*** Org-Modern
+Org-modern is essentially just a better version of org-superstar. Nobody should look at markup in plain text. We need /style/.
+
+#+begin_src elisp
+;; Add frame borders and window dividers
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel))
+  (face-spec-reset-face face)
+  (set-face-foreground face (face-attribute 'default :background)))
+(set-face-background 'fringe (face-attribute 'default :background))
+
+(setq
+ ;; Edit settings
+ org-auto-align-tags nil
+ org-tags-column 0
+ org-catch-invisible-edits 'show-and-error
+ org-special-ctrl-a/e t
+ org-insert-heading-respect-content t
+
+ ;; Org styling, hide markup etc.
+ org-hide-emphasis-markers t
+ ;; org-pretty-entities t
+ org-ellipsis "…"
+
+ ;; Agenda styling
+ org-agenda-block-separator ?─
+ org-agenda-time-grid
+ '((daily today require-timed)
+   (800 1000 1200 1400 1600 1800 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+ org-agenda-current-time-string
+ "⭠ now ─────────────────────────────────────────────────")
+(global-org-modern-mode)
+#+end_src
+
+#+RESULTS:
+: t
+
+*** Org-Agenda
+#+begin_src elisp
+(after! org-agenda
+(setq org-agenda-window-setup 'other-tab)
+)
+#+end_src
+
+#+RESULTS:
+: other-tab
+*** OKAY Org-CV
+#+begin_src elisp
+(use-package! ox-awesomecv
+  :after org)
+(use-package! ox-moderncv
+  :after org)
+  #+end_src
+
+#+RESULTS:
+: ox-moderncv
+* Keybindings
+** Org Agenda
+I want quick access to common views.

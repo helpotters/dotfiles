@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: link
-# uuid:
-# key: l
-# condition: t
-# group: org-mode
-# --
-
-[[$1][$2]], $3

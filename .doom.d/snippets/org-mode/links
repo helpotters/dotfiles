@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: links
-# key: l
-# condition: t
-# --
-[[$2][$1]]

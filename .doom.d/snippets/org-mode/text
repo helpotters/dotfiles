@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: text
-# key: t
-# group: latex
-# --
-\text{$1}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: subject { described_class.new(params) }
+# key: subj
+# --
+subject${(:${subject_name})} { ${described_class}.${`ruby-rspec-describe-class`}${(${params})} }

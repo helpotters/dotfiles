@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: gemfile gem install
-# uuid:
-# key: g
-# group: ruby
-# --
-gem '$1' '$2'

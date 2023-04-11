@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: avogadro's number
-# key: an
-# group: latex
-# --
-6.022 \times 10^{23}

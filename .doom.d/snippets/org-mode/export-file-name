@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: export-file-name
-# key: ef
-# group: latex
-# --
-#+EXPORT_FILE_NAME: ./pdfs/$1

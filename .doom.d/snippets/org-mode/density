@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: density
-# key: den
-# group: latex
-# --
-$$1g/cm^{3}$

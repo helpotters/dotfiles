@@ -1,0 +1,7 @@
+#+title: Complaints
+* Basic
+- Org-Agenda closes current window and opens as minibuffer
+- Organization of general configuration can be confusing (rspec rotate words)
+- Naming otavio for many things
+- Not setting an org file as the default user config
+- Solidity

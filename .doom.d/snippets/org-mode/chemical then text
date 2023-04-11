@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: chemical then text
-# key: ctn
-# group: latex
-# --
-$$1: \text{$2}$
